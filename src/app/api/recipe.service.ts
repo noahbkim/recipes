@@ -11,7 +11,7 @@ export class RecipeService {
 
   constructor(private http: HttpClient) { }
 
-  list(): Promise<Object> {
+  list(): Promise<Array<{}>> {
     return new Promise((resolve, reject) => {
       this.http.get(API + '/recipes').subscribe((data) => {
         resolve(data);
