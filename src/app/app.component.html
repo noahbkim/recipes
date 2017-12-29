@@ -1,13 +1,3 @@
-<div *ngIf="id !== null">
-  <template [ngSwitch]="mode">
-    <ng-container *ngSwitchCase="Mode.INGREDIENTS">
-      Ingredients
-    </ng-container>
-    <ng-container *ngSwitchCase="Mode.RECIPES">
-      Recipes
-    </ng-container>
-  </template>
-</div>
-<div *ngIf="id === null">
-
+<div *ngFor="let item of library">
+  {{ item.name }}
 </div>

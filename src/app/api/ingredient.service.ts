@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { API } from '../../variables';
 
 import { Ingredient } from './ingredient';
@@ -8,7 +8,7 @@ import { Ingredient } from './ingredient';
 @Injectable()
 export class IngredientService {
 
-  constructor(private http: Http) {}
+  constructor(private http: HttpClient) {}
 
   list(): Promise<Ingredient> {
     return new Promise(() => {});

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { Recipe } from './recipe';
 import { Ingredient } from './ingredient';
@@ -9,16 +9,15 @@ import { API } from '../../variables';
 @Injectable()
 export class RecipeService {
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
-  list(): Promise<Recipe> {
+  list(): Promise<Object> {
     return new Promise((resolve, reject) => {
-      this.http.get(API + '/recipes').forEach((res: Response) => {
-        try {
-          resolve(res.json().map(values => new Recipe(values)));
-        } catch (e) {
-          reject(e);
-        }
+      this.http.get(API + '/recipes').subscribe((data) => {
+        resolve(data);
+      }, (error) => {
+        console.warn('Error! ' + error.message);
+        reject();
       });
     });
   }
