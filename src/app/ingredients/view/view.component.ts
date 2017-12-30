@@ -23,8 +23,8 @@ export class IngredientViewComponent implements OnInit {
   /** Called when the component is initialized. */
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.ingredients.get(params.id).then(value => {
-        this.ingredient = value;
+      this.ingredients.get(params.id).then(ingredient => {
+        this.ingredient = ingredient;
       }, warn());
     });
   }

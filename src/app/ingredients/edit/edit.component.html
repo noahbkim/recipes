@@ -1,8 +1,8 @@
 <form name="ingredient">
   <input name="name" type="text" class="h1" placeholder="Name">
-  <textarea class="p" name="description" placeholder="Description"></textarea>
+  <textarea name="description" class="p" placeholder="Description"></textarea>
   <div class="buttons">
-    <span class="button">Save</span>
-    <span class="button">Save & New</span>
+    <span class="button" (click)=[save()]>Save</span>
+    <span class="button" (click)=[save(true)]>Save & New</span>
   </div>
 </form>
