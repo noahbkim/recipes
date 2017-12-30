@@ -2,3 +2,72 @@ body {
   font-family: "Open Sans", "Avenir", sans-serif;
   background-color: lightgray;
 }
+
+$proportion: 25%;
+
+h1, h2, h3 {
+  font-weight: normal;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+p, ul, ol {
+  margin-top: 0;
+  color: #666;
+}
+
+ul, ol {
+  padding-left: 24px;
+}
+
+li.optional {
+  color: #888;
+}
+
+.navigation a {
+  text-decoration: none;
+  display: block;
+  color: #666;
+}
+
+.container {
+  margin: 5rem auto;
+  width: 600px;
+
+  .flex {
+    display: flex;
+    flex-direction: row;
+
+    .left, .right {
+      box-sizing: border-box;
+    }
+
+    .left {
+      display: inline-block;
+      min-width: $proportion;
+      text-align: right;
+      padding-top: 52px;
+      padding-right: 1rem;
+    }
+
+    .right {
+      display: inline-block;
+      min-width: 100% - $proportion;
+      padding-left: 1rem;
+      border-left: 2px solid black;
+    }
+
+  }
+
+}
+
+.item {
+  h3 {
+    cursor: pointer;
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+  }
+}
+

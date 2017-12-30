@@ -5,7 +5,7 @@ import { API } from '../../variables';
 import { ItemService, Item } from './item';
 import { Ingredient } from './ingredient';
 
-import { warnAndReject } from './convenience';
+import { warnAndReject } from '../convenience';
 
 
 /** Access ingredients from the API server. */

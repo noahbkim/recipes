@@ -5,7 +5,7 @@ import { IngredientService } from './ingredient.service';
 import { Item, ItemService } from './item';
 import { Recipe } from './recipe';
 
-import { warnAndReject } from './convenience';
+import { warnAndReject } from '../convenience';
 
 import { API } from '../../variables';
 
@@ -36,7 +36,6 @@ export class RecipeService implements ItemService {
             component['ingredient'] = ingredient;
           });
         });
-        console.log(new Recipe(data));
         resolve(new Recipe(data));
       }, warnAndReject(reject));
     });

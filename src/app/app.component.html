@@ -1,60 +1,25 @@
 <div class="container">
   <div class="flex">
     <div class="left">
-
-      <!-- The left side menu. -->
       <div class="navigation">
         <div id="recipes" class="section">
           <h3>Recipes</h3>
           <div class="dropdown">
-            <a>Library</a>
-            <a>New</a>
+            <a routerLink="/recipes">Library</a>
+            <a routerLink="/recipes/new">New</a>
           </div>
         </div>
         <div id="ingredients" class="section">
           <h3>Ingredients</h3>
           <div class="dropdown">
-            <a>Library</a>
-            <a>New</a>
+            <a routerLink="/ingredients">Library</a>
+            <a routerLink="/ingredients/new">New</a>
           </div>
         </div>
       </div>
-
     </div>
-
-    <!-- The right side menu. -->
     <div class="right">
-
-      <div *ngIf="hasItem()">
-        <div *ngIf="mode === RECIPES">
-          <h1>{{ item.name }}</h1>
-          <p>{{ item.description }}</p>
-          <h2>Ingredients</h2>
-          <ul>
-            <li *ngFor="let ingredient of recipe.ingredients">
-              {{ ingredient.amount }} {{ ingredient.ingredient.name }}
-            </li>
-          </ul>
-          <h2>Recipe</h2>
-          <ol>
-            <li *ngFor="let step of recipe.steps">
-              {{ step }}
-            </li>
-          </ol>
-          <h2>Notes</h2>
-          <p>{{ recipe.notes }}</p>
-        </div>
-      </div>
-
-      <div *ngIf="!hasItem()">
-        <h1>{{ mode }}</h1>
-        <div class="item" *ngFor="let item of items">
-          <h3 (click)=[setItem(item.id)]>{{ item.name }}</h3>
-          <p>{{ item.description }}</p>
-        </div>
-      </div>
-
+      <router-outlet></router-outlet>
     </div>
-
   </div>
 </div>
