@@ -16,6 +16,7 @@ import { RecipeEditComponent } from './recipes/edit/edit.component';
 
 export const routes = [
   { path: 'ingredients', component: IngredientsComponent },
+  { path: 'ingredients/new', component: IngredientEditComponent },
   { path: 'ingredients/:id', component: IngredientViewComponent },
   { path: 'ingredients/:id/edit', component: IngredientEditComponent },
   { path: 'recipes', component: RecipesComponent },
