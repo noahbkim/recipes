@@ -22,7 +22,7 @@ export class RecipeService implements ItemService {
     return new Promise((resolve, reject) => {
       this.http.get(API + '/recipes').subscribe((data) => {
         resolve((data as Array<{}>).map(value => new Item(value)));
-      }, warnAndReject(reject));
+      }, reject);
     });
   }
 
@@ -34,10 +34,13 @@ export class RecipeService implements ItemService {
         data['ingredients'].map(component => {
           this.ingredients.get(component['ingredient']).then(ingredient => {
             component['ingredient'] = ingredient;
+          }, error => {
+            console.warn(error);
+            component['ingredient'] = null;
           });
         });
         resolve(new Recipe(data));
-      }, warnAndReject(reject));
+      }, reject);
     });
   }
 

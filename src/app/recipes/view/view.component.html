@@ -8,9 +8,10 @@
   <ul>
     <li class="ingredient" *ngFor="let ingredient of recipe.ingredients">
       {{ ingredient.amount }}
-      <a routerLink="/ingredients/{{ ingredient.ingredient.id }}">
+      <a *ngIf="ingredient.ingredient" routerLink="/ingredients/{{ ingredient.ingredient.id }}">
         {{ ingredient.ingredient.name }}
       </a>
+      <span *ngIf="ingredient.ingredient === null" class="red">???</span>
     </li>
   </ul>
   <h2>Recipe</h2>

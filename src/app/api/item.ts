@@ -3,7 +3,7 @@ export class Item {
 
   id: String;
   name: String;
-  description: String;
+  // description: String;
 
   /** Construct the model with a dictionary. */
   constructor(values: Object = {}) {

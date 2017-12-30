@@ -4,5 +4,6 @@
   <div class="buttons">
     <span class="button" (click)=[save()]>Save</span>
     <span class="button" (click)=[save(true)]>Save & New</span>
+    <span *ngIf="id" class="button" (click)=[delete()]>Delete</span>
   </div>
 </form>

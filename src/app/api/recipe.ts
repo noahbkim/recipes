@@ -4,6 +4,7 @@ import { Ingredient } from './ingredient';
 /** A full recipe. */
 export class Recipe extends Item {
 
+  description: String;
   ingredients: Array<{amount: String, ingredient: Ingredient}>;
   steps: Array<String>;
   notes: String;

@@ -48,11 +48,21 @@ export class IngredientEditComponent implements OnInit {
     }
     promise.then(data => {
       if (andNew) {
-        this.router.navigate(['/ingredients/new']);
+        this.form['name'].value = '';
+        this.form['description'].value = '';
       } else {
         this.router.navigate(['/ingredients/' + data]);
       }
     }, warn());
+  }
+
+  /** Delete the ingredient. */
+  delete() {
+    if (this.id) {
+      this.ingredients.delete(this.id).then(() => {
+        this.router.navigate(['/ingredients']);
+      }, warn());
+    }
   }
 
 }

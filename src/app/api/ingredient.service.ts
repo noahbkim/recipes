@@ -5,8 +5,6 @@ import { API } from '../../variables';
 import { ItemService, Item } from './item';
 import { Ingredient } from './ingredient';
 
-import { warnAndReject } from '../convenience';
-
 
 /** Access ingredients from the API server. */
 @Injectable()
@@ -20,7 +18,7 @@ export class IngredientService {
     return new Promise((resolve, reject) => {
       this.http.get(API + '/ingredients').subscribe(data => {
         resolve((data as Array<{}>).map(value => new Item(value)));
-      }, warnAndReject(reject));
+      }, reject);
     });
   }
 
@@ -29,16 +27,7 @@ export class IngredientService {
     return new Promise((resolve, reject) => {
       this.http.get(API + '/ingredients/' + id).subscribe(data => {
         resolve(new Ingredient(data));
-      }, warnAndReject(reject));
-    });
-  }
-
-  /** Update an ingredient with its ID. */
-  update(id, value): Promise<String> {
-    return new Promise((resolve, reject) => {
-      this.http.post(API + '/ingredients/' + id, value).subscribe(data => {
-        resolve(data['id']);
-      }, warnAndReject(reject));
+      }, reject);
     });
   }
 
@@ -47,7 +36,25 @@ export class IngredientService {
     return new Promise((resolve, reject) => {
       this.http.post(API + '/ingredients', value).subscribe(data => {
         resolve(data['id']);
-      }, warnAndReject(reject));
+      }, reject);
+    });
+  }
+
+  /** Update an ingredient with its ID. */
+  update(id, value): Promise<String> {
+    return new Promise((resolve, reject) => {
+      this.http.post(API + '/ingredients/' + id, value).subscribe(data => {
+        resolve(data['id']);
+      }, reject);
+    });
+  }
+
+  /** Delete an ingredient. */
+  delete(id): Promise<null> {
+    return new Promise((resolve, reject) => {
+      this.http.delete(API + '/ingredients/' + id).subscribe(data => {
+        resolve();
+      }, reject);
     });
   }
 
