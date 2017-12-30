@@ -11,3 +11,11 @@ export class Item {
   }
 
 }
+
+/** Simple interface for API service. */
+export interface ItemService {
+
+  /** Get the list of items. */
+  list(): Promise<Array<Item>>;
+
+}

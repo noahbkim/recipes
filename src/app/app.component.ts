@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 
-import { Item } from './api/item';
+import { Item, ItemService } from './api/item';
 import { Ingredient } from './api/ingredient';
-import { Recipe } from './api/Recipe';
+import { Recipe } from './api/recipe';
 
 import { RecipeService } from './api/recipe.service';
 import { IngredientService } from './api/ingredient.service';
+
+import { warn } from './api/convenience';
 
 const RECIPES: String = 'Recipes';
 const INGREDIENTS: String = 'Ingredients';
@@ -31,59 +33,41 @@ export class AppComponent {
   /** Construct the app component. */
   constructor(public recipes: RecipeService, public ingredients: IngredientService) {
     this.loadItems();
-
   }
+
+  /** Get the correct items service. */
+  get itemService(): ItemService { return this.mode === RECIPES ? this.recipes : this.ingredients; }
 
   /** Load the current library. */
   loadItems() {
-    if (this.mode === RECIPES) {
-      this.recipes.list().then((data) => {
-        this.items = data;
-      }, (error) => {
-        console.warn(error);
-      });
-    } else {
-
-    }
+    this.itemService.list().then(data => this.items = data, warn());
   }
 
   /** Set the mode from recipes to ingredients. */
-  setMode(mode: String) {
-    this.mode = mode;
-  }
-
-  /** Set the recipe or ingredient. */
-  setItem(item) {
-    if (item instanceof Recipe) { return this.setRecipe(item); }
-    return this.setIngredient(item);
-  }
+  setMode(mode: String) { this.mode = mode; }
 
   /** Get the current item. */
-  getItem() {
-    if (this.mode === RECIPES) { return this.recipe; }
-    return this.ingredient;
-  }
+  get item(): Item { return this.mode === RECIPES ? this.recipe : this.ingredient; }
 
-  /** Check if we have an item. */
-  hasItem() {
-    return this.getItem() !== null;
-  }
-
-  /** Clear recipes and items. */
-  clearItem() {
-    this.recipe = this.ingredient = null;
-  }
+  /** Set the recipe or ingredient. */
+  setItem(item) { this.mode === RECIPES ? this.setRecipe(item) : this.setIngredient(item); }
 
   /** Set the recipe. */
-  setRecipe(recipe) {
+  setRecipe(id) {
     this.mode = RECIPES;
-    return this.recipe = recipe;
+    this.recipes.get(id).then(recipe => this.recipe = recipe, warn());
   }
 
   /** Set the ingredient. */
-  setIngredient(ingredient) {
+  setIngredient(id) {
     this.mode = INGREDIENTS;
-    return this.ingredient = ingredient;
+    this.recipes.get(id).then(recipe => this.recipe = recipe, warn());
   }
+
+  /** Check if we have an item. */
+  hasItem(): Boolean { return this.item !== null; }
+
+  /** Clear recipes and items. */
+  clearItem() { this.recipe = this.ingredient = null; }
 
 }

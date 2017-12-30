@@ -1,34 +1,51 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
-import { Item } from './item';
+import { IngredientService } from './ingredient.service';
+import { Item, ItemService } from './item';
 import { Recipe } from './recipe';
-import { Ingredient } from './ingredient';
+
+import { warnAndReject } from './convenience';
+
 import { API } from '../../variables';
 
 
+/** The recipe interface for the API server. */
 @Injectable()
-export class RecipeService {
+export class RecipeService implements ItemService {
 
-  constructor(private http: HttpClient) { }
+  /** Require an HTTP client and ingredients service. */
+  constructor(private http: HttpClient, private ingredients: IngredientService) { }
 
+  /** Get the list of recipes as items. */
   list(): Promise<Array<Item>> {
     return new Promise((resolve, reject) => {
       this.http.get(API + '/recipes').subscribe((data) => {
-        const items = [];
-        for (const values of data as Array<{}>) { items.push(new Item(values)); }
-        resolve(items);
-      }, (error) => {
-        console.warn('Error! ' + error.message);
-        reject();
-      });
+        resolve((data as Array<{}>).map(value => new Item(value)));
+      }, warnAndReject(reject));
     });
   }
 
-  get(id) {}
+  /** Get a full recipe object from an ID. */
+  get(id): Promise<Recipe> {
+    return new Promise((resolve, reject) => {
+      this.http.get(API + '/recipes/' + id).subscribe(data => {
+        data = data as {};
+        data['ingredients'].map(component => {
+          this.ingredients.get(component['ingredient']).then(ingredient => {
+            component['ingredient'] = ingredient;
+          });
+        });
+        console.log(new Recipe(data));
+        resolve(new Recipe(data));
+      }, warnAndReject(reject));
+    });
+  }
 
+  /** Create a new recipe. */
   create(data) {}
 
-  set(id, data) {}
+  /** Update a recipe. */
+  update(id, data) {}
 
 }

@@ -19,8 +19,8 @@
 
       <div *ngIf="hasItem()">
         <div *ngIf="mode === RECIPES">
-          <h1>{{ getItem().name }}</h1>
-          <p>{{ getItem().description }}</p>
+          <h1>{{ item.name }}</h1>
+          <p>{{ item.description }}</p>
           <h2>Ingredients</h2>
           <ul>
             <li *ngFor="let ingredient of recipe.ingredients">
@@ -40,7 +40,7 @@
 
       <div *ngIf="!hasItem()">
         <h1>{{ mode }}</h1>
-        <div *ngFor="let item of items">
+        <div class="item" *ngFor="let item of items">
           <h3 (click)=[setItem(item.id)]>{{ item.name }}</h3>
           <p>{{ item.description }}</p>
         </div>
