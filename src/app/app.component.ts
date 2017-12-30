@@ -7,10 +7,8 @@ import { Recipe } from './api/Recipe';
 import { RecipeService } from './api/recipe.service';
 import { IngredientService } from './api/ingredient.service';
 
-enum Mode {
-  RECIPES = 0,
-  INGREDIENTS = 1
-}
+const RECIPES: String = 'Recipes';
+const INGREDIENTS: String = 'Ingredients';
 
 
 @Component({
@@ -21,10 +19,14 @@ enum Mode {
 export class AppComponent {
 
   title = 'Recipes';
-  mode = Mode.RECIPES;
-  library = Array<{}>();
-  Mode = Mode;
-  id: String;
+
+  RECIPES: String = RECIPES;
+  INGREDIENTS: String = INGREDIENTS;
+  mode: String = RECIPES;
+
+  library = Array<Item>();
+  recipe: Recipe = null;
+  ingredient: Ingredient = null;
 
   /** Construct the app component. */
   constructor(public recipes: RecipeService, public ingredients: IngredientService) {
@@ -33,11 +35,39 @@ export class AppComponent {
 
   /** Load the current library. */
   loadLibrary() {
-    this.recipes.list().then((data) => {
-      this.library = data;
-    }, (error) => {
-      console.warn(error);
-    });
+    if (this.mode === RECIPES) {
+      this.recipes.list().then((data) => {
+        this.library = data;
+        console.log(this.library);
+      }, (error) => {
+        console.warn(error);
+      });
+    } else {
+
+    }
+  }
+
+  /** Set the recipe. */
+  setRecipe(recipe) {
+    this.mode = RECIPES;
+    this.recipe = recipe;
+  }
+
+  /** Set the ingredient. */
+  setIngredient(ingredient) {
+    this.mode = INGREDIENTS;
+    this.ingredient = ingredient;
+  }
+
+  /** Get the current item. */
+  getItem() {
+    if (this.mode === RECIPES) { return this.recipe; }
+    return this.ingredient;
+  }
+
+  /** Check if we have an item. */
+  hasItem() {
+    return this.getItem() !== null;
   }
 
 }

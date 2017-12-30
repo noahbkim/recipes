@@ -5,4 +5,9 @@ export class Item {
   name: String;
   description: String;
 
+  /** Construct the model with a dictionary. */
+  constructor(values: Object = {}) {
+    Object.assign(this, values);
+  }
+
 }
