@@ -15,7 +15,9 @@ export class RecipeService {
   list(): Promise<Array<Item>> {
     return new Promise((resolve, reject) => {
       this.http.get(API + '/recipes').subscribe((data) => {
-        resolve(Array<{}>(data).map((value) => new Item(value)));
+        const items = [];
+        for (const values of data as Array<{}>) { items.push(new Item(values)); }
+        resolve(items);
       }, (error) => {
         console.warn('Error! ' + error.message);
         reject();

@@ -34,17 +34,14 @@
             </li>
           </ol>
           <h2>Notes</h2>
-          <p>
-            {{ recipe.notes }}
-          </p>
+          <p>{{ recipe.notes }}</p>
         </div>
       </div>
 
       <div *ngIf="!hasItem()">
         <h1>{{ mode }}</h1>
-        <div *ngFor="let item of library">
-          {{ item.id }}
-          <h2>{{ item.name }}</h2>
+        <div *ngFor="let item of items">
+          <h3 (click)=[setItem(item.id)]>{{ item.name }}</h3>
           <p>{{ item.description }}</p>
         </div>
       </div>

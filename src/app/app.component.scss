@@ -6,6 +6,10 @@ h1, h2, h3 {
   margin-bottom: 8px;
 }
 
+h3 {
+  margin-bottom: 4px;
+}
+
 p, ul, ol {
   margin-top: 0;
   color: #666;
@@ -42,11 +46,6 @@ li.optional {
         text-decoration: none;
         display: block;
         color: #666;
-      }
-
-      .section > h3 {
-        margin-top: 0;
-        margin-bottom: 0;
       }
 
     }

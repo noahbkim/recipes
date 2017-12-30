@@ -18,27 +18,27 @@ const INGREDIENTS: String = 'Ingredients';
 })
 export class AppComponent {
 
-  title = 'Recipes';
+  title: String = 'Recipes';
 
   RECIPES: String = RECIPES;
   INGREDIENTS: String = INGREDIENTS;
   mode: String = RECIPES;
 
-  library = Array<Item>();
+  items: Array<Item> = Array<Item>();
   recipe: Recipe = null;
   ingredient: Ingredient = null;
 
   /** Construct the app component. */
   constructor(public recipes: RecipeService, public ingredients: IngredientService) {
-    this.loadLibrary();
+    this.loadItems();
+
   }
 
   /** Load the current library. */
-  loadLibrary() {
+  loadItems() {
     if (this.mode === RECIPES) {
       this.recipes.list().then((data) => {
-        this.library = data;
-        console.log(this.library);
+        this.items = data;
       }, (error) => {
         console.warn(error);
       });
@@ -47,16 +47,15 @@ export class AppComponent {
     }
   }
 
-  /** Set the recipe. */
-  setRecipe(recipe) {
-    this.mode = RECIPES;
-    this.recipe = recipe;
+  /** Set the mode from recipes to ingredients. */
+  setMode(mode: String) {
+    this.mode = mode;
   }
 
-  /** Set the ingredient. */
-  setIngredient(ingredient) {
-    this.mode = INGREDIENTS;
-    this.ingredient = ingredient;
+  /** Set the recipe or ingredient. */
+  setItem(item) {
+    if (item instanceof Recipe) { return this.setRecipe(item); }
+    return this.setIngredient(item);
   }
 
   /** Get the current item. */
@@ -68,6 +67,23 @@ export class AppComponent {
   /** Check if we have an item. */
   hasItem() {
     return this.getItem() !== null;
+  }
+
+  /** Clear recipes and items. */
+  clearItem() {
+    this.recipe = this.ingredient = null;
+  }
+
+  /** Set the recipe. */
+  setRecipe(recipe) {
+    this.mode = RECIPES;
+    return this.recipe = recipe;
+  }
+
+  /** Set the ingredient. */
+  setIngredient(ingredient) {
+    this.mode = INGREDIENTS;
+    return this.ingredient = ingredient;
   }
 
 }
