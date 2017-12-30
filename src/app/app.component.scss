@@ -1,5 +1,12 @@
+#space {
+  visibility: hidden;
+}
+
 .section {
 
+  h3 { }
+
+  /* Animated dropdown
   h3 {
     cursor: default;
   }
@@ -17,6 +24,11 @@
 
   .dropdown a {
     cursor: pointer;
+  }
+  */
+
+  .dropdown {
+    margin-bottom: 12px;
   }
 
 }

@@ -19,6 +19,7 @@ export const routes = [
   { path: 'ingredients/:id', component: IngredientViewComponent },
   { path: 'ingredients/:id/edit', component: IngredientEditComponent },
   { path: 'recipes', component: RecipesComponent },
+  { path: 'recipes/new', component: RecipeEditComponent },
   { path: 'recipes/:id', component: RecipeViewComponent },
   { path: 'recipes/:id/edit', component: RecipeEditComponent }
 ];
