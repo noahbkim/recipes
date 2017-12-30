@@ -14,7 +14,11 @@ router.route("/recipes")
       else {
         let data = [];
         for (let recipe of recipes)
-          data.push({id: recipe.id, name: recipe.name});
+          data.push({
+            id: recipe.id, 
+            name: recipe.name,
+            description: recipe.description
+          });
         res.json(data);
       }
     })
@@ -68,7 +72,11 @@ router.route("/ingredients")
       else {
         let data = [];
         for (let ingredient of ingredients)
-          data.push({id: ingredient.id, name: ingredient.name});
+          data.push({
+            id: ingredient.id, 
+            name: ingredient.name,
+            description: ingredient.description
+          });
         res.json(data);
       }
     });
