@@ -1,5 +1,8 @@
 <div *ngIf="recipe">
-  <h1>{{ recipe.name }}</h1>
+  <h1>
+    {{ recipe.name }}
+    <a routerLink="/recipes/{{ recipe.id }}/edit">#</a>
+  </h1>
   <p>{{ recipe.description }}</p>
   <h2>Ingredients</h2>
   <ul>

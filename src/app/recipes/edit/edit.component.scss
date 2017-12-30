@@ -1,0 +1,23 @@
+#ingredients {
+  li {
+    .add, .delete {
+      cursor: pointer;
+    }
+    .add {
+      font-weight: 500;
+    }
+    input[type="text"]:first-child {
+      width: 100px;
+      margin-right: 5px;
+    }
+    input[type="text"]:nth-child(2) { width: 240px; }
+  }
+}
+
+#steps {
+  li {
+    input[type="text"] {
+      width: 350px;
+    }
+  }
+}
