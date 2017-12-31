@@ -22,7 +22,7 @@ function makeToJSON(fields) {
 }
 
 
-/** Schema for a basic ingredient. */
+/* Schema for a basic ingredient. */
 const IngredientSchema = new Schema({
   name: {type: String, unique: true},
   description: String,
@@ -38,8 +38,8 @@ IngredientSchema.methods.toJSON = makeToJSON(ingredientFields.concat("id"));
 const RecipeSchema = new Schema({
   name: {type: String, unique: true},
   description: String,
-  ingredients: {type: [{
-    ingredient: {type: Schema.Types.ObjectId, ref: "Ingredient", required: true},
+  parts: {type: [{
+    id: {type: Schema.Types.ObjectId, ref: "Ingredient", required: true},
     amount: String,
   }], validate: [(arr) => arr.length > 0]},
   steps: {type: [String]},

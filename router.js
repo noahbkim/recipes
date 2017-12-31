@@ -35,7 +35,7 @@ router.route("/recipes")
       }
       res.json({id: recipe.id});
     });
-  })
+  });
 
 
 /** Specific recipe ID route. */
@@ -97,7 +97,7 @@ router.route("/ingredients")
       if (err) { res.status(400).json({error: err.message}); return; }
       res.json({id: ingredient.id});
     });
-  })
+  });
   
 /** Specific recipe ID route. */
 router.route("/ingredients/:id")
