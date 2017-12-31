@@ -11,6 +11,7 @@ export function warnAndReject(reject): (error: any) => void {
   };
 }
 
+
 /** Element controller. */
 export class ElementController {
 
