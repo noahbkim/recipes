@@ -8,7 +8,7 @@ import { warn } from '../../convenience';
 
 
 @Component({
-  selector: 'app-edit',
+  selector: 'app-ingredient-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })

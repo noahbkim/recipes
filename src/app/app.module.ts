@@ -13,7 +13,7 @@ import { IngredientViewComponent } from './ingredients/view/view.component';
 import { IngredientEditComponent } from './ingredients/edit/edit.component';
 import { RecipeViewComponent } from './recipes/view/view.component';
 import { RecipeEditComponent } from './recipes/edit/edit.component';
-import { IngredientEditorComponent } from './recipes/edit/ingredient/ingredient.component';
+import { PartEditorComponent } from './recipes/edit/part/part.component';
 import { StepEditorComponent } from './recipes/edit/step/step.component';
 
 export const routes = [
@@ -36,7 +36,7 @@ export const routes = [
     IngredientEditComponent,
     RecipeViewComponent,
     RecipeEditComponent,
-    IngredientEditorComponent,
+    PartEditorComponent,
     StepEditorComponent,
   ],
   imports: [

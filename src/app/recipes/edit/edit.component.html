@@ -3,14 +3,23 @@
   <textarea name="description" class="p" placeholder="Description"></textarea>
   <h2>Ingredients</h2>
   <ul id="ingredients">
-    <li *ngFor="let component of ingredientComponents">
-      {{ component }}
+    <li *ngFor="let part of parts; let i = index">
+      <app-part-editor
+        [amount]=part.amount
+        [ingredient]=part.ingredient
+        [add]=getAddIngredient()
+        [index]=i>
+      </app-part-editor>
     </li>
   </ul>
   <h2>Recipe</h2>
   <ol id="steps">
-    <li *ngFor="let component of stepComponents">
-      {{ component }}
+    <li *ngFor="let step of steps; let i = index">
+      <app-step-editor
+        [step]=step
+        [add]=getAddStep()
+        [index]=i>
+      </app-step-editor>
     </li>
   </ol>
   <h2>Notes</h2>

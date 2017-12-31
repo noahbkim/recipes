@@ -8,7 +8,7 @@ import { warn } from '../../convenience';
 
 
 @Component({
-  selector: 'app-view',
+  selector: 'app-ingredient-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss']
 })

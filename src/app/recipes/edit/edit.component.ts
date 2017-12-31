@@ -3,17 +3,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Item } from '../../api/item';
 import { IngredientService } from '../../api/ingredient.service';
-import { Recipe } from '../../api/recipe';
+import { Recipe, Part } from '../../api/recipe';
 import { RecipeService } from '../../api/recipe.service';
 
-import { IngredientEditorComponent } from './ingredient/ingredient.component';
+import { PartEditorComponent } from './part/part.component';
 import { StepEditorComponent } from './step/step.component';
 
 import { warn } from '../../convenience';
 
 
 @Component({
-  selector: 'app-edit',
+  selector: 'app-recipe-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
@@ -23,8 +23,8 @@ export class RecipeEditComponent implements OnInit {
   id: String;
   form: Element;
   ingredientList = Array<Item>();
-  ingredientComponents = Array<IngredientEditorComponent>();
-  stepComponents = Array<StepEditorComponent>();
+  parts = Array<Part>();
+  steps = Array<String>();
 
   /** Construct with an ingredients service access. */
   constructor(
@@ -59,13 +59,18 @@ export class RecipeEditComponent implements OnInit {
   save(andNew) {}
 
   /** Add an empty ingredient. */
-  addIngredient() {
-    this.ingredientComponents.push(new IngredientEditorComponent());
+  addIngredient(index = null, values: Object = {}) {
+    if (index === null) { index = this.parts.length; }
+    this.parts.splice(index, 0, new Part(values));
   }
 
   /** Add an empty step. */
-  addStep() {
-    this.stepComponents.push(new StepEditorComponent());
+  addStep(index = null, step: String = '') {
+    if (index === null) { index = this.steps.length; }
+    this.steps.splice(index, 0, step);
   }
+
+  getAddIngredient() { return this.addIngredient.bind(this); }
+  getAddStep() { return this.addStep.bind(this); }
 
 }

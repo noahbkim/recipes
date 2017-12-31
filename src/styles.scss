@@ -116,3 +116,11 @@ form {
   }
 
 }
+
+.add, .delete {
+  cursor: pointer;
+}
+
+.add {
+  font-weight: 500;
+}
