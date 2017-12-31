@@ -9,7 +9,7 @@ router.route("/recipes")
   
   /** Get an overview of the recipes. */
   .get((req, res) => {
-    models.Recipe.find((err, recipes) => {
+    models.Recipe.find().sort({name: 1}).exec((err, recipes) => {
       if (err) { res.status(400).json({error: err.message}); }
       else {
         let data = [];
@@ -17,7 +17,7 @@ router.route("/recipes")
           data.push({
             id: recipe.id, 
             name: recipe.name,
-            description: recipe.description
+            //description: recipe.description
           });
         res.json(data);
       }
@@ -60,6 +60,13 @@ router.route("/recipes/:id")
         res.json({id: recipe.id});
       });
     });
+  })
+  
+  .delete((req, res) => {
+    models.Recipe.remove({ id: req.params.id }, (err) => {
+      if (err) { res.status(400).json({error: err.message}); return; }
+      res.json({});
+    });
   });
 
 
@@ -67,7 +74,7 @@ router.route("/ingredients")
 
   /** Get the list of ingredients. */
   .get((req, res) => {
-    models.Ingredient.find((err, ingredients) => {
+    models.Ingredient.find().sort({name: 1}).exec((err, ingredients) => {
       if (err) { res.status(400).json({error: err.message}); }
       else {
         let data = [];
@@ -75,7 +82,7 @@ router.route("/ingredients")
           data.push({
             id: ingredient.id, 
             name: ingredient.name,
-            description: ingredient.description
+            //description: ingredient.description
           });
         res.json(data);
       }
@@ -87,10 +94,7 @@ router.route("/ingredients")
     let ingredient = new models.Ingredient();
     ingredient.updateFromRequest(req);
     ingredient.save((err) => { 
-      if (err) {
-        res.status(400).json({error: err.message});
-        return;
-      }
+      if (err) { res.status(400).json({error: err.message}); return; }
       res.json({id: ingredient.id});
     });
   })
@@ -102,6 +106,7 @@ router.route("/ingredients/:id")
   .get((req, res) => {
     models.Ingredient.findById(req.params.id, (err, ingredient) => {
       if (err) { res.status(400).json({error: err.message}); return; }
+      if (ingredient === null) { res.status(400).json({error: "No such ingredient"}); return; }
       res.json(ingredient.toJSON());
     });
   })
@@ -115,6 +120,14 @@ router.route("/ingredients/:id")
         if (err) { res.status(400).json({error: err.message}); return; }
         res.json({id: ingredient.id});
       });
+    });
+  })
+
+  /** Delete the ingredient. */  
+  .delete((req, res) => {
+    models.Ingredient.remove({ _id: req.params.id }, (err) => {
+      if (err) { res.status(400).json({error: err.message}); return; }
+      res.json({});
     });
   });
 

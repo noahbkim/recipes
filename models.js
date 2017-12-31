@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-
 const Schema = mongoose.Schema;
 
 
+/** Generate an updater function. */
 function makeUpdateFromRequest(fields) {
   return function(req) {
     for (let field of fields)
@@ -11,6 +11,7 @@ function makeUpdateFromRequest(fields) {
   }
 }
 
+/** Generate a JSON export. */
 function makeToJSON(fields) {
   return function() {
     let data = {};
@@ -21,16 +22,19 @@ function makeToJSON(fields) {
 }
 
 
+/** Schema for a basic ingredient. */
 const IngredientSchema = new Schema({
   name: {type: String, unique: true},
   description: String,
 });
 
-IngredientSchema.methods.updateFromRequest = makeUpdateFromRequest([
-  "name", "description"]);
-IngredientSchema.methods.toJSON = makeToJSON([
-  "id", "name", "description"]);
+/* Update and JSON methods. */
+const ingredientFields = ["name", "description"];
+IngredientSchema.methods.updateFromRequest = makeUpdateFromRequest(ingredientFields);
+IngredientSchema.methods.toJSON = makeToJSON(ingredientFields.concat("id"));
 
+
+/** Schema for recipes. */
 const RecipeSchema = new Schema({
   name: {type: String, unique: true},
   description: String,
@@ -43,11 +47,13 @@ const RecipeSchema = new Schema({
   starred: Boolean
 });
 
-RecipeSchema.methods.updateFromRequest = makeUpdateFromRequest([
-  "name", "description", "ingredients", "steps", "notes", "starred"]);
-RecipeSchema.methods.toJSON = makeToJSON([
-  "id", "name", "description", "ingredients", "steps", "notes", "starred"]);
+/* Update and JSON methods. */
+const recipeFields = ["name", "description", "ingredients", "steps", "notes", "starred"];
+RecipeSchema.methods.updateFromRequest = makeUpdateFromRequest(recipeFields);
+RecipeSchema.methods.toJSON = makeToJSON(recipeFields.concat("id"));
 
+
+/** Export the actual models. */
 module.exports = {
   Ingredient: mongoose.model("Ingredient", IngredientSchema),
   Recipe: mongoose.model("Recipe", RecipeSchema)
