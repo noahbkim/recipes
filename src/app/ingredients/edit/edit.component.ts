@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { Ingredient } from '../../api/ingredient';
 import { IngredientService } from '../../api/ingredient.service';
 
 import { warn } from '../../convenience';
@@ -22,16 +23,19 @@ export class IngredientEditComponent implements OnInit {
 
   /** Called when the component is initialized. */
   ngOnInit() {
+    this.form = document.forms['ingredient'];
     this.route.params.subscribe(params => {
-      this.form = document.forms['ingredient'];
       if (params.id) {
         this.id = params.id;
-        this.ingredients.get(params.id).then(ingredient => {
-          this.form['name'].value = ingredient.name;
-          this.form['description'].value = ingredient.description;
-        }, warn());
+        this.ingredients.get(params.id).then(this.populateForm.bind(this), warn());
       }
     });
+  }
+
+  /** Populate the form with existing data. */
+  populateForm(ingredient: Ingredient) {
+    this.form['name'].value = ingredient.name;
+    this.form['description'].value = ingredient.description;
   }
 
   /** Save the ingredient. */

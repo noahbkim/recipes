@@ -10,17 +10,3 @@ export function warnAndReject(reject): (error: any) => void {
     reject();
   };
 }
-
-
-/** Element controller. */
-export class ElementController {
-
-  static template: String;
-  element: Element;
-
-  /** Instantiate with the element. */
-  constructor(element: Element) {
-    this.element = element;
-  }
-
-}

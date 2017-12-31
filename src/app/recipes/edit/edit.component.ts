@@ -3,49 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Item } from '../../api/item';
 import { IngredientService } from '../../api/ingredient.service';
+import { Recipe } from '../../api/recipe';
+import { RecipeService } from '../../api/recipe.service';
 
-import { ElementController, warn } from '../../convenience';
+import { IngredientEditorComponent } from './ingredient/ingredient.component';
+import { StepEditorComponent } from './step/step.component';
 
-
-/** Auto complete controller. */
-export class AutoCompleteController {
-
-  input: Element;
-  dropdown: Element;
-  options = Array<Item>();
-
-  constructor(input: Element, dropdown: Element, options: Array<Item>) {
-    this.input = input;
-    this.dropdown = dropdown;
-    this.options = options;
-    this.input.addEventListener('activate', () => {
-
-    });
-  }
-
-  hide() {
-    this.dropdown.classList.add('hidden');
-  }
-
-  show() {
-    this.dropdown.classList.remove('hidden');
-  }
-
-}
-
-/** Control an entry for an ingredient. */
-class IngredientController extends ElementController {
-  constructor(element: Element, options: Array<Item>) {
-    super(element);
-    const ingredientInput = element.getElementsByClassName('ingredient')[0];
-    const dropdownElement = document.getElementById('ingredients-dropdown');
-    const autoComplete = new AutoCompleteController(ingredientInput, dropdownElement, options);
-  }
-}
-
-/** Control an entry for a recipe step. */
-class StepController extends ElementController {
-}
+import { warn } from '../../convenience';
 
 
 @Component({
@@ -55,33 +19,53 @@ class StepController extends ElementController {
 })
 export class RecipeEditComponent implements OnInit {
 
-  ingredientTemplate: String;
-  stepTemplate: String;
-  ingredientList: Array<Item>;
-  ingredientControllers = Array<IngredientController>();
-  stepControllers = Array<StepController>();
+  /** Ingredient ID. */
+  id: String;
+  form: Element;
+  ingredientList = Array<Item>();
+  ingredientComponents = Array<IngredientEditorComponent>();
+  stepComponents = Array<StepEditorComponent>();
 
   /** Construct with an ingredients service access. */
-  constructor(private ingredients: IngredientService, private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private ingredients: IngredientService,
+    private recipes: RecipeService,
+    private router: Router,
+    private route: ActivatedRoute) {}
 
   /** Called when the component is initialized. */
   ngOnInit() {
-    const ingredientTemplate = document.getElementById('ingredients');
-    IngredientController.template = ingredientTemplate.innerHTML;
-    const stepTemplate = document.getElementById('steps');
-    StepController.template = stepTemplate.innerHTML;
-    this.ingredients.list().then(value => {
-      this.ingredientList = value;
-      this.ingredientControllers.push(new IngredientController(ingredientTemplate, value));
-    }, warn());
-    this.stepControllers.push(new StepController(stepTemplate));
+    this.form = document.forms['recipe'];
+    this.ingredients.list().then(ingredients => {
+      this.ingredientList = ingredients;
+      this.route.params.subscribe(params => {
+        if (params.id) {
+          this.id = params.id;
+          this.ingredients.get(params.id).then(this.populateForm.bind(this), warn());
+        } else {
+          this.addIngredient();
+          this.addStep();
+        }
+      });
+    });
+  }
+
+  /** Populate the form with existing data. */
+  populateForm(recipe: Recipe) {
+    this.form['name'].value = recipe.name;
+    this.form['description'].value = recipe.description;
   }
 
   save(andNew) {}
 
-  /** Add a new ingredient. */
+  /** Add an empty ingredient. */
   addIngredient() {
+    this.ingredientComponents.push(new IngredientEditorComponent());
+  }
 
+  /** Add an empty step. */
+  addStep() {
+    this.stepComponents.push(new StepEditorComponent());
   }
 
 }

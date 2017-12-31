@@ -3,19 +3,14 @@
   <textarea name="description" class="p" placeholder="Description"></textarea>
   <h2>Ingredients</h2>
   <ul id="ingredients">
-    <li>
-      <input type="text" class="p" placeholder="amount">
-      <input type="text" class="p" placeholder="ingredient">
-      <span class="add">+</span>
-      <span class="delete">&times;</span>
+    <li *ngFor="let component of ingredientComponents">
+      {{ component }}
     </li>
   </ul>
   <h2>Recipe</h2>
   <ol id="steps">
-    <li>
-      <input type="text" class="p" placeholder="step">
-      <span class="add">+</span>
-      <span class="delete">&times;</span>
+    <li *ngFor="let component of stepComponents">
+      {{ component }}
     </li>
   </ol>
   <h2>Notes</h2>
