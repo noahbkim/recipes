@@ -42,7 +42,9 @@ const RecipeSchema = new Schema({
     id: {type: Schema.Types.ObjectId, ref: "Ingredient", required: true},
     amount: String,
   }], validate: [(arr) => arr.length > 0]},
-  steps: {type: [String]},
+  steps: {type: [{
+    description: String,
+  }]},
   notes: String,
   starred: Boolean
 });
