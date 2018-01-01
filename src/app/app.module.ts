@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 
@@ -17,6 +18,7 @@ import { PartEditorComponent } from './recipes/edit/part/part.component';
 import { StepEditorComponent } from './recipes/edit/step/step.component';
 
 export const routes = [
+  { path: '', redirectTo: 'recipes', pathMatch: 'full' },
   { path: 'ingredients', component: IngredientsComponent },
   { path: 'ingredients/new', component: IngredientEditComponent },
   { path: 'ingredients/:id', component: IngredientViewComponent },
@@ -42,6 +44,7 @@ export const routes = [
   imports: [
     BrowserModule,
     HttpClientModule,
+    FormsModule,
     RouterModule.forRoot(routes)
   ],
   providers: [

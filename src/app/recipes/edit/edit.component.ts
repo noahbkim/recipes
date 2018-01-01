@@ -3,11 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Item } from '../../api/item';
 import { IngredientService } from '../../api/ingredient.service';
-import { Recipe, Part } from '../../api/recipe';
+import { Recipe, Part, Step } from '../../api/recipe';
 import { RecipeService } from '../../api/recipe.service';
-
-import { PartEditorComponent } from './part/part.component';
-import { StepEditorComponent } from './step/step.component';
 
 import { warn } from '../../convenience';
 
@@ -19,12 +16,14 @@ import { warn } from '../../convenience';
 })
 export class RecipeEditComponent implements OnInit {
 
+  recipe: Recipe;
+
   /** Ingredient ID. */
   id: String;
   form: Element;
   ingredientList = Array<Item>();
   parts = Array<Part>();
-  steps = Array<String>();
+  steps = Array<Step>();
 
   /** Construct with an ingredients service access. */
   constructor(
@@ -41,8 +40,12 @@ export class RecipeEditComponent implements OnInit {
       this.route.params.subscribe(params => {
         if (params.id) {
           this.id = params.id;
-          this.ingredients.get(params.id).then(this.populateForm.bind(this), warn());
+          this.recipes.get(params.id).then(recipe => {
+            this.recipe = recipe;
+            this.populateForm();
+          }, warn());
         } else {
+          this.recipe = new Recipe();
           this.addIngredient();
           this.addStep();
         }
@@ -51,9 +54,8 @@ export class RecipeEditComponent implements OnInit {
   }
 
   /** Populate the form with existing data. */
-  populateForm(recipe: Recipe) {
-    this.form['name'].value = recipe.name;
-    this.form['description'].value = recipe.description;
+  populateForm() {
+
   }
 
   save(andNew) {}
@@ -63,14 +65,15 @@ export class RecipeEditComponent implements OnInit {
     if (index === null) { index = this.parts.length; }
     this.parts.splice(index, 0, new Part(values));
   }
+  getAddIngredient() { return this.addIngredient.bind(this); }
 
   /** Add an empty step. */
-  addStep(index = null, step: String = '') {
+  addStep(index = null, values: Object = {}) {
+    console.log(new Step());
     if (index === null) { index = this.steps.length; }
-    this.steps.splice(index, 0, step);
+    this.steps.splice(index, 0, new Step(values));
+    console.log(this.steps.map(s => s.description));
   }
-
-  getAddIngredient() { return this.addIngredient.bind(this); }
   getAddStep() { return this.addStep.bind(this); }
 
 }

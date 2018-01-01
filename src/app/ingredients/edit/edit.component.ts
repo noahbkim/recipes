@@ -14,46 +14,33 @@ import { warn } from '../../convenience';
 })
 export class IngredientEditComponent implements OnInit {
 
+  ingredient: Ingredient = new Ingredient();
+
   /** Ingredient ID. */
   id: String;
-  form: Element;
 
   /** Construct with an ingredients service access. */
   constructor(private ingredients: IngredientService, private router: Router, private route: ActivatedRoute) {}
 
   /** Called when the component is initialized. */
   ngOnInit() {
-    this.form = document.forms['ingredient'];
     this.route.params.subscribe(params => {
       if (params.id) {
         this.id = params.id;
-        this.ingredients.get(params.id).then(this.populateForm.bind(this), warn());
+        this.ingredients.get(params.id).then(ingredient => {
+          this.ingredient = ingredient;
+        }, warn());
+      } else {
+        this.ingredient = new Ingredient();
       }
     });
   }
 
-  /** Populate the form with existing data. */
-  populateForm(ingredient: Ingredient) {
-    this.form['name'].value = ingredient.name;
-    this.form['description'].value = ingredient.description;
-  }
-
   /** Save the ingredient. */
   save(andNew = false) {
-    const value = {
-      name: this.form['name'].value,
-      description: this.form['description'].value
-    };
-    let promise;
-    if (this.id) {
-      promise = this.ingredients.update(this.id, value);
-    } else {
-      promise = this.ingredients.create(value);
-    }
-    promise.then(data => {
+    this.ingredients.updateOrCreate(this.id, this.ingredient.toJSON()).then(data => {
       if (andNew) {
-        this.form['name'].value = '';
-        this.form['description'].value = '';
+        this.ingredient = new Ingredient();
       } else {
         this.router.navigate(['/ingredients/' + data]);
       }

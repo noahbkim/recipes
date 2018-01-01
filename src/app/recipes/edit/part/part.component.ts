@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
+
+import { Part } from '../../../api/recipe';
 
 
 @Component({
@@ -6,16 +8,25 @@ import { Component, OnInit, Input } from '@angular/core';
   templateUrl: './part.component.html',
   styleUrls: ['./part.component.scss']
 })
-export class PartEditorComponent implements OnInit {
+export class PartEditorComponent implements OnInit, AfterViewInit {
 
   @Input() amount: String;
   @Input() ingredient: String;
   @Input() add: (index: Number, values: Object) => null;
   @Input() index: Number;
 
+  @ViewChild('add') addElement;
+  @ViewChild('delete') deleteElement;
+
   /** Custom constructor. */
   constructor() {}
 
   ngOnInit() {}
+
+  ngAfterViewInit() {
+    this.addElement.nativeElement.addEventListener('click', () => {
+      this.add(this.index, new Part());
+    });
+  }
 
 }

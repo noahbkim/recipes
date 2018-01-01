@@ -11,4 +11,13 @@ export class Ingredient extends Item {
     Object.assign(this, values);
   }
 
+  /** Convert to JSON. */
+  toJSON(): {} {
+    const base = super.toJSON();
+    Object.assign(base, {
+      description: this.description
+    });
+    return base;
+  }
+
 }

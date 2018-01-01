@@ -10,6 +10,10 @@ export class Item {
     Object.assign(this, values);
   }
 
+  toJSON(): {} {
+    return {id: this.id, name: this.name};
+  }
+
 }
 
 /** Simple interface for API service. */

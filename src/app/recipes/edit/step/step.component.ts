@@ -1,5 +1,7 @@
 import { Component, OnInit, AfterViewInit, Input, ViewChild } from '@angular/core';
 
+import { Step } from '../../../api/recipe';
+
 
 @Component({
   selector: 'app-step-editor',
@@ -8,7 +10,7 @@ import { Component, OnInit, AfterViewInit, Input, ViewChild } from '@angular/cor
 })
 export class StepEditorComponent implements OnInit, AfterViewInit {
 
-  @Input() step: String;
+  @Input() step: Step;
   @Input() index: Number;
   @Input() add: (index: Number) => null;
 

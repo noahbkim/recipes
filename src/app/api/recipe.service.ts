@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { IngredientService } from './ingredient.service';
 import { Item, ItemService } from './item';
-import { Recipe, Part } from './recipe';
+import { Recipe, Part, Step } from './recipe';
 
 import { API } from '../../variables';
 import { warn } from '../convenience';
@@ -33,6 +33,7 @@ export class RecipeService implements ItemService {
         /* Create the recipe. */
         data = data as {};
         data['parts'] = data['parts'].map(values => new Part(values));
+        data['steps'] = data['steps'].map(values => new Step(values));
         const recipe = new Recipe(data);
 
         /* Map and pull all the ingredients for the parts, resolving when finished. */

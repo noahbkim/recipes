@@ -49,6 +49,11 @@ export class IngredientService {
     });
   }
 
+  /** Convenience method. */
+  updateOrCreate(id, value): Promise<String> {
+    return id === null ? this.create(value) : this.update(id, value);
+  }
+
   /** Delete an ingredient. */
   delete(id): Promise<null> {
     return new Promise((resolve, reject) => {
