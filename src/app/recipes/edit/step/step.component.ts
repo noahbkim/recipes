@@ -17,9 +17,6 @@ export class StepEditorComponent implements AfterViewInit {
   @ViewChild('add') addElement;
   @ViewChild('delete') deleteElement;
 
-  /** Custom constructor. */
-  constructor() {}
-
   ngAfterViewInit() {
     this.addElement.nativeElement.addEventListener('click', () => this.add(this.index + 1));
   }
