@@ -17,7 +17,7 @@ router.route("/recipes")
           data.push({
             id: recipe.id, 
             name: recipe.name,
-            //description: recipe.description
+            description: recipe.description
           });
         res.json(data);
       }
