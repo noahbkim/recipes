@@ -16,7 +16,7 @@ import { warn } from '../../convenience';
 })
 export class RecipeEditComponent implements OnInit {
 
-  recipe: Recipe;
+  recipe: Recipe = new Recipe();
 
   /** Ingredient ID. */
   id: String;
@@ -58,22 +58,26 @@ export class RecipeEditComponent implements OnInit {
 
   }
 
-  save(andNew) {}
+  save(andNew) {
+    console.log(this.recipe);
+
+  }
 
   /** Add an empty ingredient. */
-  addIngredient(index = null, values: Object = {}) {
+  addIngredient(index: number = null, values: Object = {}) {
     if (index === null) { index = this.parts.length; }
     this.parts.splice(index, 0, new Part(values));
   }
+
   getAddIngredient() { return this.addIngredient.bind(this); }
 
   /** Add an empty step. */
-  addStep(index = null, values: Object = {}) {
-    console.log(new Step());
+  addStep(index: number = null, values: Object = {}) {
     if (index === null) { index = this.steps.length; }
     this.steps.splice(index, 0, new Step(values));
     console.log(this.steps.map(s => s.description));
   }
+
   getAddStep() { return this.addStep.bind(this); }
 
 }

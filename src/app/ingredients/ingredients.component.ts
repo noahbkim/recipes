@@ -19,9 +19,7 @@ export class IngredientsComponent implements OnInit {
 
   /** Called on initialization of the component. */
   ngOnInit() {
-    this.ingredients.list().then(data => {
-      this.items = data;
-    });
+    this.ingredients.list().then(data => this.items = data);
   }
 
 }

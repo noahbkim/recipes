@@ -1,7 +1,7 @@
 /** Basic interface for listing ingredients and recipes. */
 export class Item {
 
-  id: String;
+  id: String = null;
   name: String;
   description: String;
 
@@ -11,7 +11,7 @@ export class Item {
   }
 
   toJSON(): {} {
-    return {id: this.id, name: this.name};
+    return {id: this.id, name: this.name, description: this.description};
   }
 
 }

@@ -8,7 +8,7 @@ import { Ingredient } from './ingredient';
 
 /** Access ingredients from the API server. */
 @Injectable()
-export class IngredientService {
+export class IngredientService implements ItemService {
 
   /** Request an HTTP client injection to make API requests. */
   constructor(private http: HttpClient) {}
@@ -26,6 +26,7 @@ export class IngredientService {
   get(id): Promise<Ingredient> {
     return new Promise((resolve, reject) => {
       this.http.get(API + '/ingredients/' + id).subscribe(data => {
+        console.log(data);
         resolve(new Ingredient(data));
       }, reject);
     });
@@ -33,6 +34,7 @@ export class IngredientService {
 
   /** Create a new ingredient. */
   create(value): Promise<String> {
+    console.log('create');
     return new Promise((resolve, reject) => {
       this.http.post(API + '/ingredients', value).subscribe(data => {
         resolve(data['id']);
@@ -42,6 +44,7 @@ export class IngredientService {
 
   /** Update an ingredient with its ID. */
   update(id, value): Promise<String> {
+    console.log('update');
     return new Promise((resolve, reject) => {
       this.http.post(API + '/ingredients/' + id, value).subscribe(data => {
         resolve(data['id']);
@@ -51,6 +54,7 @@ export class IngredientService {
 
   /** Convenience method. */
   updateOrCreate(id, value): Promise<String> {
+    console.log(id);
     return id === null ? this.create(value) : this.update(id, value);
   }
 

@@ -16,9 +16,6 @@ export class IngredientEditComponent implements OnInit {
 
   ingredient: Ingredient = new Ingredient();
 
-  /** Ingredient ID. */
-  id: String;
-
   /** Construct with an ingredients service access. */
   constructor(private ingredients: IngredientService, private router: Router, private route: ActivatedRoute) {}
 
@@ -26,7 +23,7 @@ export class IngredientEditComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       if (params.id) {
-        this.id = params.id;
+        this.ingredient.id = params.id;
         this.ingredients.get(params.id).then(ingredient => {
           this.ingredient = ingredient;
         }, warn());
@@ -38,7 +35,8 @@ export class IngredientEditComponent implements OnInit {
 
   /** Save the ingredient. */
   save(andNew = false) {
-    this.ingredients.updateOrCreate(this.id, this.ingredient.toJSON()).then(data => {
+    this.ingredients.updateOrCreate(this.ingredient.id, this.ingredient.toJSON()).then(data => {
+      console.log(data);
       if (andNew) {
         this.ingredient = new Ingredient();
       } else {
@@ -49,8 +47,8 @@ export class IngredientEditComponent implements OnInit {
 
   /** Delete the ingredient. */
   delete() {
-    if (this.id) {
-      this.ingredients.delete(this.id).then(() => {
+    if (this.ingredient.id !== null) {
+      this.ingredients.delete(this.ingredient.id).then(() => {
         this.router.navigate(['/ingredients']);
       }, warn());
     }

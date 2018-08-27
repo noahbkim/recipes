@@ -79,11 +79,7 @@ router.route("/ingredients")
       else {
         let data = [];
         for (let ingredient of ingredients)
-          data.push({
-            id: ingredient.id, 
-            name: ingredient.name,
-            //description: ingredient.description
-          });
+          data.push(ingredient.toJSON());
         res.json(data);
       }
     });

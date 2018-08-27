@@ -1,9 +1,9 @@
 <form name="ingredient">
-  <input name="name" type="text" class="h1" placeholder="Name" [(ngModel)]="ingredient.name">
-  <textarea name="description" class="p" placeholder="Description" [(ngModel)]="ingredient.description"></textarea>
+  <input name="name" type="text" class="h1" placeholder="name" [(ngModel)]="ingredient.name">
+  <textarea name="description" class="p" placeholder="description" [(ngModel)]="ingredient.description"></textarea>
   <div class="buttons">
-    <span class="button" (click)=[save()]>Save</span>
-    <span class="button" (click)=[save(true)]>Save & New</span>
-    <span *ngIf="id" class="button" (click)=[delete()]>Delete</span>
+    <span class="button" (click)=[save()]>save</span>
+    <span class="button" (click)=[save(true)]>save & new</span>
+    <span *ngIf="ingredient.id" class="button" (click)=[delete()]>delete</span>
   </div>
 </form>

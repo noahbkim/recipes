@@ -1,11 +1,5 @@
 $proportion: 25%;
 
-a {
-  text-decoration: none;
-  display: block;
-  color: inherit;
-}
-
 .navigation {
 
   .section {
@@ -19,6 +13,7 @@ a {
     .dropdown > a {
       font-size: 20px;
       color: #666;
+      display: block;
     }
 
   }
@@ -55,8 +50,8 @@ a {
 
 }
 
-#space {
-  visibility: hidden;
+#recipes {
+  margin-top: 3rem;
 }
 
 
