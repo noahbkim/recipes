@@ -1,9 +1,9 @@
 /** Basic interface for listing ingredients and recipes. */
 export class Item {
 
-  id: String = null;
-  name: String;
-  description: String;
+  id: string = null;
+  name: string;
+  description: string;
 
   /** Construct the model with a dictionary. */
   constructor(values: Object = {}) {

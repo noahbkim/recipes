@@ -1,4 +1,7 @@
-<input #amount type="text" class="p" placeholder="amount">
-<input #ingredient type="text" class="p" placeholder="ingredient">
+<input #amount id="amount" type="text" class="p" placeholder="amount">
+<input #ingredient id="ingredient" type="text" class="p" placeholder="ingredient">
 <span #add class="add">+</span>
 <span #delete class="delete">&times;</span>
+<div id="search">
+  <span *ngFor="let searchItem of searchItems">{{ searchItem }}</span>
+</div>

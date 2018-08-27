@@ -1,8 +1,18 @@
-input[type="text"]:first-child {
+#amount {
   width: 100px;
   margin-right: 5px;
 }
 
-input[type="text"]:nth-child(2) {
+#ingredient {
   width: 260px;
+}
+
+#search {
+  display: block;
+  transition: height 0.5s;
+  padding-left: 110px;
+
+  span {
+    display: block;
+  }
 }
