@@ -1,10 +1,10 @@
 <input #amount id="amount" type="text" class="p" placeholder="amount" [(ngModel)]="part.amount">
 <input #ingredient id="ingredient" type="text" class="p" placeholder="ingredient" autocomplete="off"
-       [(ngModel)]="ingredientName"
-       [ngModel]="ingredientName"
-       [class.valid]="validItem">
+       [(ngModel)]=ingredientName
+       [ngModel]=ingredientName
+       [class.valid]=validItem>
 <span #add class="add">+</span>
-<span #delete class="delete">&times;</span>
+<span *ngIf="index > 0" #remove class="delete">&times;</span>
 <div id="search">
   <span *ngFor="let ingredient of searchItems" (click)="setIngredient(ingredient)">{{ ingredient.name }}</span>
 </div>

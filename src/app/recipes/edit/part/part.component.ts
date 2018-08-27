@@ -13,7 +13,8 @@ import { IngredientService } from '../../../api/ingredient.service';
 export class PartEditorComponent implements OnInit, AfterViewInit {
 
   @Input() part: Part;
-  @Input() add: (index: number, values: Object) => null;
+  @Input() add: (index: number, object: any) => null;
+  @Input() remove: (index: number) => null;
   @Input() index: number;
 
   ingredientName = '';
@@ -23,7 +24,7 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
   validItem = false;
 
   @ViewChild('add') addElement;
-  @ViewChild('delete') deleteElement;
+  @ViewChild('remove') removeElement;
   @ViewChild('ingredient') ingredientElement;
 
   /** Custom constructor. */
@@ -40,6 +41,7 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.addElement.nativeElement.addEventListener('click', () => this.add(this.index + 1, new Part()));
+    this.removeElement.nativeElement.addEventListener('click', () => this.remove(this.index));
     this.ingredientElement.nativeElement.addEventListener('focus', () => this.updateSearch());
     this.ingredientElement.nativeElement.addEventListener('input', () => {
       this.validItem = false;

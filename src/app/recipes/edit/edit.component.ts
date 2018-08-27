@@ -43,8 +43,8 @@ export class RecipeEditComponent implements OnInit {
           }, warn());
         } else {
           this.recipe = new Recipe();
-          this.addIngredient();
-          this.addStep();
+          this.recipe.parts.push(new Part());
+          this.recipe.steps.push(new Step());
         }
       });
     });
@@ -65,21 +65,17 @@ export class RecipeEditComponent implements OnInit {
     }
   }
 
-
-  /** Add an empty ingredient. */
-  addIngredient(index: number = null, values: Object = {}) {
-    if (index === null) { index = this.recipe.parts.length; }
-    this.recipe.parts.splice(index, 0, new Part(values));
+  makeAdd(list: any[]) {
+    return (index: number = null, object: any) => {
+      if (index === null) { index = list.length; }
+      list.splice(index, 0, object);
+    };
   }
 
-  getAddIngredient() { return this.addIngredient.bind(this); }
-
-  /** Add an empty step. */
-  addStep(index: number = null, values: Object = {}) {
-    if (index === null) { index = this.recipe.steps.length; }
-    this.recipe.steps.splice(index, 0, new Step(values));
+  makeRemove(list: any[]) {
+    return (index: number) => {
+      list.splice(index, 1);
+    };
   }
-
-  getAddStep() { return this.addStep.bind(this); }
 
 }
