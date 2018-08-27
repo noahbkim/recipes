@@ -40,7 +40,6 @@ export class RecipeEditComponent implements OnInit {
           this.id = params.id;
           this.recipes.get(params.id).then(recipe => {
             this.recipe = recipe;
-            this.populateForm();
           }, warn());
         } else {
           this.recipe = new Recipe();
@@ -51,17 +50,21 @@ export class RecipeEditComponent implements OnInit {
     });
   }
 
-  /** Populate the form with existing data. */
-  populateForm() {
-
-  }
-
   save(andNew) {
-    console.log(this.recipe.toJSON());
     this.recipes.updateOrCreate(this.recipe.id, this.recipe.toJSON()).then(data => {
       if (!andNew) { this.router.navigate(['recipes', data]); }
     });
   }
+
+  /** Delete the ingredient. */
+  delete() {
+    if (this.recipe.id !== null) {
+      this.recipes.delete(this.recipe.id).then(() => {
+        this.router.navigate(['recipes']);
+      }, warn());
+    }
+  }
+
 
   /** Add an empty ingredient. */
   addIngredient(index: number = null, values: Object = {}) {

@@ -1,4 +1,4 @@
-import { Component, Input, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, Input, AfterViewInit, OnInit, ViewChild } from '@angular/core';
 
 import { Part } from '../../../api/recipe';
 import { Item } from '../../../api/item';
@@ -10,13 +10,14 @@ import { IngredientService } from '../../../api/ingredient.service';
   templateUrl: './part.component.html',
   styleUrls: ['./part.component.scss']
 })
-export class PartEditorComponent implements AfterViewInit {
+export class PartEditorComponent implements OnInit, AfterViewInit {
 
   @Input() part: Part;
   @Input() add: (index: number, values: Object) => null;
   @Input() index: number;
 
   ingredientName = '';
+
   ingredientsList: Item[] = [];
   searchItems: Item[];
   validItem = false;
@@ -28,6 +29,13 @@ export class PartEditorComponent implements AfterViewInit {
   /** Custom constructor. */
   constructor(private ingredients: IngredientService) {
     ingredients.list(true).then(data => this.ingredientsList = data);
+  }
+
+  ngOnInit() {
+    if (this.part) {
+      this.validItem = true;
+      this.ingredientName = this.part.ingredient.name;
+    }
   }
 
   ngAfterViewInit() {

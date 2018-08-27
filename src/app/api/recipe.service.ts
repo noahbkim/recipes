@@ -71,4 +71,13 @@ export class RecipeService implements ItemService {
     return id === null ? this.create(value) : this.update(id, value);
   }
 
+  /** Delete an ingredient. */
+  delete(id): Promise<null> {
+    return new Promise((resolve, reject) => {
+      this.http.delete(API + '/recipes/' + id).subscribe(data => {
+        resolve();
+      }, reject);
+    });
+  }
+
 }

@@ -18,11 +18,7 @@
   <div class="buttons">
     <span class="button" (click)=[save()]>save</span>
     <span class="button" (click)=[save(true)]>save & new</span>
+    <span *ngIf="recipe.id" class="button" (click)=[delete()]>delete</span>
   </div>
 </form>
 
-<div id="ingredients-dropdown">
-  <ul>
-
-  </ul>
-</div>
