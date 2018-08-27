@@ -12,15 +12,17 @@ export class IngredientService implements ItemService {
 
   /** Persist the editing ingredient. */
   public local: Ingredient = new Ingredient();
+  public cache: Item[] = null;
 
   /** Request an HTTP client injection to make API requests. */
   constructor(private http: HttpClient) {}
 
   /** Get the overview list of ingredients as items. */
-  list(): Promise<Array<Item>> {
+  list(cached = false): Promise<Array<Item>> {
     return new Promise((resolve, reject) => {
+      if (cached && this.cache) { resolve(this.cache); }
       this.http.get(API + '/ingredients').subscribe(data => {
-        resolve((data as Array<{}>).map(value => new Item(value)));
+        resolve(this.cache = (data as Array<{}>).map(value => new Item(value)));
       }, reject);
     });
   }

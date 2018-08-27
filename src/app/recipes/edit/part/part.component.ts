@@ -27,7 +27,7 @@ export class PartEditorComponent implements AfterViewInit {
 
   /** Custom constructor. */
   constructor(private ingredients: IngredientService) {
-    ingredients.list().then(data => this.ingredientsList = data);
+    ingredients.list(true).then(data => this.ingredientsList = data);
   }
 
   ngAfterViewInit() {
