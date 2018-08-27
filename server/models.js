@@ -34,11 +34,7 @@ IngredientSchema.methods.toJSON = makeToJSON(ingredientFields.concat("id"));
 
 /** Pretend that a part is a distinct model. */
 const Part = {
-  id: {
-    type: Schema.Types.ObjectId,
-    ref: "Ingredient",
-    required: true
-  },
+  id: String,
   amount: String,
 };
 
@@ -58,7 +54,7 @@ const RecipeSchema = new Schema({
 });
 
 /* Update and JSON methods. */
-const recipeFields = ["name", "description", "ingredients", "steps", "notes", "starred"];
+const recipeFields = ["name", "description", "parts", "steps", "notes", "starred"];
 RecipeSchema.methods.updateFromRequest = makeUpdateFromRequest(recipeFields);
 RecipeSchema.methods.toJSON = makeToJSON(recipeFields.concat("id"));
 

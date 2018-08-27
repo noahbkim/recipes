@@ -19,11 +19,9 @@ export class RecipeEditComponent implements OnInit {
   recipe: Recipe = new Recipe();
 
   /** Ingredient ID. */
-  id: String;
+  id: string;
   form: Element;
-  ingredientList = Array<Item>();
-  parts = Array<Part>();
-  steps = Array<Step>();
+  ingredientList: Item[] = [];
 
   /** Construct with an ingredients service access. */
   constructor(
@@ -59,22 +57,24 @@ export class RecipeEditComponent implements OnInit {
   }
 
   save(andNew) {
-    console.log(this.recipe);
-
+    console.log(this.recipe.toJSON());
+    this.recipes.updateOrCreate(this.recipe.id, this.recipe.toJSON()).then(data => {
+      if (!andNew) { this.router.navigate(['recipes', data]); }
+    });
   }
 
   /** Add an empty ingredient. */
   addIngredient(index: number = null, values: Object = {}) {
-    if (index === null) { index = this.parts.length; }
-    this.parts.splice(index, 0, new Part(values));
+    if (index === null) { index = this.recipe.parts.length; }
+    this.recipe.parts.splice(index, 0, new Part(values));
   }
 
   getAddIngredient() { return this.addIngredient.bind(this); }
 
   /** Add an empty step. */
   addStep(index: number = null, values: Object = {}) {
-    if (index === null) { index = this.steps.length; }
-    this.steps.splice(index, 0, new Step(values));
+    if (index === null) { index = this.recipe.steps.length; }
+    this.recipe.steps.splice(index, 0, new Step(values));
   }
 
   getAddStep() { return this.addStep.bind(this); }

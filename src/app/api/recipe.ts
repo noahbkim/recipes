@@ -37,8 +37,8 @@ export class Step {
 /** A full recipe. */
 export class Recipe extends Item {
 
-  ingredients: Array<Part>;
-  steps: Array<Step>;
+  parts: Part[] = [];
+  steps: Step[] = [];
   notes: String;
   starred: Boolean;
 
@@ -51,8 +51,7 @@ export class Recipe extends Item {
   toJSON(): {} {
     const base = super.toJSON();
     Object.assign(base, {
-      description: this.description,
-      ingredients: this.ingredients.map(ingredient => ingredient.toJSON()),
+      parts: this.parts.map(part => part.toJSON()),
       steps: this.steps.map(step => step.toJSON()),
       notes: this.notes,
       starred: this.starred

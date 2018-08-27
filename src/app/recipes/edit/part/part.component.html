@@ -1,4 +1,4 @@
-<input #amount id="amount" type="text" class="p" placeholder="amount">
+<input #amount id="amount" type="text" class="p" placeholder="amount" [(ngModel)]="part.amount">
 <input #ingredient id="ingredient" type="text" class="p" placeholder="ingredient"
        [(ngModel)]="ingredientName" [class.valid]="validItem" autocomplete="off">
 <span #add class="add">+</span>

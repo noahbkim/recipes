@@ -57,11 +57,10 @@ export class PartEditorComponent implements AfterViewInit {
   }
 
   setIngredient(ingredient) {
-    this.part.ingredient = ingredient;
+    this.part.id = ingredient.id;
     this.validItem = true;
-    this.ingredientElement.nativeElement.value = this.part.ingredient.name;
+    this.ingredientElement.nativeElement.value = ingredient.name;
     this.searchItems = [];
-    console.log(this.searchItems);
   }
 
 }

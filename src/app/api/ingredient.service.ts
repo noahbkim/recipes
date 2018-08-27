@@ -39,7 +39,6 @@ export class IngredientService implements ItemService {
 
   /** Create a new ingredient. */
   create(value): Promise<String> {
-    console.log('create');
     return new Promise((resolve, reject) => {
       this.http.post(API + '/ingredients', value).subscribe(data => {
         resolve(data['id']);
@@ -49,7 +48,6 @@ export class IngredientService implements ItemService {
 
   /** Update an ingredient with its ID. */
   update(id, value): Promise<String> {
-    console.log('update');
     return new Promise((resolve, reject) => {
       this.http.post(API + '/ingredients/' + id, value).subscribe(data => {
         resolve(data['id']);
@@ -59,7 +57,6 @@ export class IngredientService implements ItemService {
 
   /** Convenience method. */
   updateOrCreate(id, value): Promise<String> {
-    console.log(id);
     return id === null ? this.create(value) : this.update(id, value);
   }
 

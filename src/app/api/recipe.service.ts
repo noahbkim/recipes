@@ -48,10 +48,27 @@ export class RecipeService implements ItemService {
     });
   }
 
-  /** Create a new recipe. */
-  create(data) {}
+  /** Create a new ingredient. */
+  create(value): Promise<String> {
+    return new Promise((resolve, reject) => {
+      this.http.post(API + '/recipes', value).subscribe(data => {
+        resolve(data['id']);
+      }, reject);
+    });
+  }
 
-  /** Update a recipe. */
-  update(id, data) {}
+  /** Update an ingredient with its ID. */
+  update(id, value): Promise<String> {
+    return new Promise((resolve, reject) => {
+      this.http.post(API + '/recipes/' + id, value).subscribe(data => {
+        resolve(data['id']);
+      }, reject);
+    });
+  }
+
+  /** Convenience method. */
+  updateOrCreate(id, value): Promise<String> {
+    return id === null ? this.create(value) : this.update(id, value);
+  }
 
 }
