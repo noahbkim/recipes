@@ -24,6 +24,10 @@ ul, ol {
   padding-left: 24px;
 }
 
+ol {
+  padding-left: 28px;
+}
+
 li.optional {
   color: #888;
 }
@@ -40,7 +44,7 @@ li.optional {
 
 .container {
   margin: 5rem auto;
-  width: 600px;
+  width: 700px;
 
   .flex {
     display: flex;

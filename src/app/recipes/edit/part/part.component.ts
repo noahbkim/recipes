@@ -12,8 +12,8 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
 
   @Input() amount: String;
   @Input() ingredient: String;
-  @Input() add: (index: Number, values: Object) => null;
-  @Input() index: Number;
+  @Input() add: (index: number, values: Object) => null;
+  @Input() index: number;
 
   @ViewChild('add') addElement;
   @ViewChild('delete') deleteElement;
@@ -24,9 +24,7 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit() {
-    this.addElement.nativeElement.addEventListener('click', () => {
-      this.add(this.index, new Part());
-    });
+    this.addElement.nativeElement.addEventListener('click', () => this.add(this.index + 1, new Part()));
   }
 
 }

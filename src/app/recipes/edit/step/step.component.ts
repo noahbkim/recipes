@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, Input, ViewChild } from '@angular/core';
 
 import { Step } from '../../../api/recipe';
 
@@ -8,11 +8,11 @@ import { Step } from '../../../api/recipe';
   templateUrl: './step.component.html',
   styleUrls: ['./step.component.scss']
 })
-export class StepEditorComponent implements OnInit, AfterViewInit {
+export class StepEditorComponent implements AfterViewInit {
 
   @Input() step: Step;
-  @Input() index: Number;
-  @Input() add: (index: Number) => null;
+  @Input() index: number;
+  @Input() add: (index: number) => null;
 
   @ViewChild('add') addElement;
   @ViewChild('delete') deleteElement;
@@ -20,14 +20,8 @@ export class StepEditorComponent implements OnInit, AfterViewInit {
   /** Custom constructor. */
   constructor() {}
 
-  ngOnInit() {
-
-  }
-
   ngAfterViewInit() {
-    this.addElement.nativeElement.addEventListener('click', () => {
-      this.add(this.index);
-    });
+    this.addElement.nativeElement.addEventListener('click', () => this.add(this.index + 1));
   }
 
 }

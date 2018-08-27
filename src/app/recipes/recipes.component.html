@@ -1,5 +1,8 @@
-<h1>Recipes</h1>
+<h1>recipes</h1>
 <div class="item" *ngFor="let item of items">
   <h3><a routerLink="/recipes/{{ item.id }}">{{ item.name }}</a></h3>
   <!-- p>{{ item.description }}</p -->
 </div>
+<p *ngIf="items.length === 0">
+  <a routerLink="/recipes/new">create a new recipe</a>
+</p>

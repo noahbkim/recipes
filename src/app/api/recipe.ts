@@ -37,7 +37,6 @@ export class Step {
 /** A full recipe. */
 export class Recipe extends Item {
 
-  description: String;
   ingredients: Array<Part>;
   steps: Array<Step>;
   notes: String;

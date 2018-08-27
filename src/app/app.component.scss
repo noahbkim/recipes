@@ -4,31 +4,15 @@
 
 .section {
 
-  h3 { }
-
-  /* Animated dropdown
   h3 {
-    cursor: default;
+    font-size: 26px;
+    margin-bottom: 0;
   }
 
-  .dropdown {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s, padding 0.3s;
+  .dropdown > a {
+    font-size: 20px;
   }
 
-  h3:hover + .dropdown, .dropdown:hover {
-    max-height: 120px;
-    padding-bottom: 8px;
-  }
-
-  .dropdown a {
-    cursor: pointer;
-  }
-  */
-
-  .dropdown {
-    margin-bottom: 12px;
-  }
+  margin-bottom: 1rem;
 
 }

@@ -1,7 +1,7 @@
 <form name="recipe">
-  <input name="name" type="text" class="h1" placeholder="Name">
-  <textarea name="description" class="p" placeholder="Description"></textarea>
-  <h2>Ingredients</h2>
+  <input name="name" type="text" class="h1" placeholder="name">
+  <textarea name="description" class="p" placeholder="description"></textarea>
+  <h2>ingredients</h2>
   <ul id="ingredients">
     <li *ngFor="let part of parts; let i = index">
       <app-part-editor
@@ -12,7 +12,7 @@
       </app-part-editor>
     </li>
   </ul>
-  <h2>Recipe</h2>
+  <h2>recipe</h2>
   <ol id="steps">
     <li *ngFor="let step of steps; let i = index">
       <app-step-editor
@@ -22,11 +22,11 @@
       </app-step-editor>
     </li>
   </ol>
-  <h2>Notes</h2>
-  <textarea name="notes" class="p" placeholder="Notes"></textarea>
+  <h2>notes</h2>
+  <textarea name="notes" class="p" placeholder="notes"></textarea>
   <div class="buttons">
-    <span class="button" (click)=[save()]>Save</span>
-    <span class="button" (click)=[save(true)]>Save & New</span>
+    <span class="button" (click)=[save()]>save</span>
+    <span class="button" (click)=[save(true)]>save & new</span>
   </div>
 </form>
 
