@@ -1,6 +1,6 @@
 <form name="recipe">
-  <input name="name" type="text" class="h1" placeholder="name" [ngModel]="recipe.name">
-  <textarea name="description" class="p" placeholder="description" [ngModel]="recipe.description"></textarea>
+  <input name="name" type="text" class="h1" placeholder="name" [(ngModel)]="recipe.name">
+  <textarea name="description" class="p" placeholder="description" [(ngModel)]="recipe.description"></textarea>
   <h2>ingredients</h2>
   <ul id="ingredients">
     <li *ngFor="let part of parts; let i = index">
@@ -23,7 +23,7 @@
     </li>
   </ol>
   <h2>notes</h2>
-  <textarea name="notes" class="p" placeholder="notes" [ngModel]="recipe.notes"></textarea>
+  <textarea name="notes" class="p" placeholder="notes" [(ngModel)]="recipe.notes"></textarea>
   <div class="buttons">
     <span class="button" (click)=[save()]>save</span>
     <span class="button" (click)=[save(true)]>save & new</span>

@@ -10,6 +10,9 @@ import { Ingredient } from './ingredient';
 @Injectable()
 export class IngredientService implements ItemService {
 
+  /** Persist the editing ingredient. */
+  public local: Ingredient = new Ingredient();
+
   /** Request an HTTP client injection to make API requests. */
   constructor(private http: HttpClient) {}
 

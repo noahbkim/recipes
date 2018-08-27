@@ -75,7 +75,6 @@ export class RecipeEditComponent implements OnInit {
   addStep(index: number = null, values: Object = {}) {
     if (index === null) { index = this.steps.length; }
     this.steps.splice(index, 0, new Step(values));
-    console.log(this.steps.map(s => s.description));
   }
 
   getAddStep() { return this.addStep.bind(this); }
