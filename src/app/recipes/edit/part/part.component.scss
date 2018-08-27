@@ -5,6 +5,12 @@
 
 #ingredient {
   width: 260px;
+  color: #AAA;
+
+  &.valid {
+    color: #666;
+  }
+
 }
 
 #search {
@@ -14,5 +20,6 @@
 
   span {
     display: block;
+    cursor: pointer;
   }
 }

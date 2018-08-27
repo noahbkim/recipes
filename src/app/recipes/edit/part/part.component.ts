@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, Input, AfterViewInit, ViewChild } from '@angular/core';
 
 import { Part } from '../../../api/recipe';
 import { Item } from '../../../api/item';
@@ -10,46 +10,57 @@ import { IngredientService } from '../../../api/ingredient.service';
   templateUrl: './part.component.html',
   styleUrls: ['./part.component.scss']
 })
-export class PartEditorComponent implements OnInit, AfterViewInit {
+export class PartEditorComponent implements AfterViewInit {
 
-  @Input() amount: string;
-  @Input() ingredient: string;
+  @Input() part: Part;
   @Input() add: (index: number, values: Object) => null;
   @Input() index: number;
 
-  id: string = null;
-
-  ingredientsList: Item[];
+  ingredientName = '';
+  ingredientsList: Item[] = [];
+  searchItems: Item[];
+  validItem = false;
 
   @ViewChild('add') addElement;
   @ViewChild('delete') deleteElement;
   @ViewChild('ingredient') ingredientElement;
-
-  searchItems: string[];
 
   /** Custom constructor. */
   constructor(private ingredients: IngredientService) {
     ingredients.list().then(data => this.ingredientsList = data);
   }
 
-  ngOnInit() {}
-
   ngAfterViewInit() {
     this.addElement.nativeElement.addEventListener('click', () => this.add(this.index + 1, new Part()));
     this.ingredientElement.nativeElement.addEventListener('focus', () => this.updateSearch());
-    this.ingredientElement.nativeElement.addEventListener('input', () => this.updateSearch());
+    this.ingredientElement.nativeElement.addEventListener('input', () => {
+      this.validItem = false;
+      this.updateSearch();
+    });
+    this.ingredientElement.nativeElement.addEventListener('blur', () => {
+      setTimeout(() => this.searchItems = [], 50);
+    });
   }
 
   updateSearch() {
-    let i = 0;
+    if (this.validItem) { return; }
     this.searchItems = [];
     for (const ingredient of this.ingredientsList) {
-      if (ingredient.name.indexOf(this.ingredient) > -1) {
-        this.searchItems.push(ingredient.name);
-        i++;
+      if (ingredient.name === this.ingredientName) {
+        this.setIngredient(ingredient);
+        return;
       }
-      if (i > 3) { break; }
+      if (this.searchItems.length < 3 && ingredient.name.indexOf(this.ingredientName) > -1) {
+        this.searchItems.push(ingredient);
+      }
     }
+  }
+
+  setIngredient(ingredient) {
+    this.part.ingredient = ingredient;
+    this.validItem = true;
+    this.ingredientElement.nativeElement.value = this.part.ingredient.name;
+    this.searchItems = [];
     console.log(this.searchItems);
   }
 
