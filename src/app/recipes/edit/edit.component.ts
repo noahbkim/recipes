@@ -38,9 +38,7 @@ export class RecipeEditComponent implements OnInit {
       this.route.params.subscribe(params => {
         if (params.id) {
           this.id = params.id;
-          this.recipes.get(params.id).then(recipe => {
-            this.recipe = recipe;
-          }, warn());
+          this.recipes.get(params.id).then(recipe => this.recipe = recipe, warn());
         } else {
           this.recipe = new Recipe();
           this.recipe.parts.push(new Part());
@@ -52,7 +50,7 @@ export class RecipeEditComponent implements OnInit {
 
   save(andNew) {
     this.recipes.updateOrCreate(this.recipe.id, this.recipe.toJSON()).then(data => {
-      if (!andNew) { this.router.navigate(['recipes', data]); }
+      if (!andNew) { this.router.navigate(['recipes', data]).then(); }
     });
   }
 
@@ -60,7 +58,7 @@ export class RecipeEditComponent implements OnInit {
   delete() {
     if (this.recipe.id !== null) {
       this.recipes.delete(this.recipe.id).then(() => {
-        this.router.navigate(['recipes']);
+        this.router.navigate(['recipes']).then();
       }, warn());
     }
   }
@@ -73,9 +71,7 @@ export class RecipeEditComponent implements OnInit {
   }
 
   makeRemove(list: any[]) {
-    return (index: number) => {
-      list.splice(index, 1);
-    };
+    return (index: number) => list.splice(index, 1);
   }
 
 }
