@@ -63,9 +63,12 @@ router.route("/recipes/:id")
   })
   
   .delete((req, res) => {
-    models.Recipe.remove({ id: req.params.id }, (err) => {
+    models.Recipe.findById(req.params.id, (err, recipe) => {
       if (err) { res.status(400).json({error: err.message}); return; }
-      res.json({});
+      recipe.remove((err) => {
+        if (err) { res.status(400).json({error: err.message}); return; }
+        res.json({});
+      });
     });
   });
 
@@ -121,9 +124,12 @@ router.route("/ingredients/:id")
 
   /** Delete the ingredient. */  
   .delete((req, res) => {
-    models.Ingredient.remove({ _id: req.params.id }, (err) => {
+    models.Ingredient.findById(req.params.id, (err, ingredient) => {
       if (err) { res.status(400).json({error: err.message}); return; }
-      res.json({});
+      ingredient.remove((err) => {
+        if (err) { res.status(400).json({error: err.message}); return; }
+        res.json({});
+      });
     });
   });
 

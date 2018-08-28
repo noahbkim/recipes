@@ -33,7 +33,7 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    if (this.part) {
+    if (this.part.id) {
       this.validItem = true;
       this.ingredientName = this.part.ingredient.name;
     }
@@ -41,7 +41,7 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.addElement.nativeElement.addEventListener('click', () => this.add(this.index + 1, new Part()));
-    this.removeElement.nativeElement.addEventListener('click', () => this.remove(this.index));
+    if (this.removeElement) { this.removeElement.nativeElement.addEventListener('click', () => this.remove(this.index)); }
     this.ingredientElement.nativeElement.addEventListener('focus', () => this.updateSearch());
     this.ingredientElement.nativeElement.addEventListener('input', () => {
       this.validItem = false;

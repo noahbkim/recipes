@@ -20,7 +20,7 @@ export class StepEditorComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.addElement.nativeElement.addEventListener('click', () => this.add(this.index + 1, new Step()));
-    this.removeElement.nativeElement.addEventListener('click', () => this.remove(this.index));
+    if (this.removeElement) { this.removeElement.nativeElement.addEventListener('click', () => this.remove(this.index)); }
   }
 
 }
