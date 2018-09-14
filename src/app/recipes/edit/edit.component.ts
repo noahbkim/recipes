@@ -7,6 +7,7 @@ import { Recipe, Part, Step } from '../../api/recipe';
 import { RecipeService } from '../../api/recipe.service';
 
 import { warn } from '../../convenience';
+import {Ingredient} from '../../api/ingredient';
 
 
 @Component({
@@ -16,8 +17,6 @@ import { warn } from '../../convenience';
 })
 export class RecipeEditComponent implements OnInit {
 
-  recipe: Recipe = new Recipe();
-
   /** Ingredient ID. */
   id: string;
   form: Element;
@@ -26,7 +25,7 @@ export class RecipeEditComponent implements OnInit {
   /** Construct with an ingredients service access. */
   constructor(
     private ingredients: IngredientService,
-    private recipes: RecipeService,
+    public recipes: RecipeService,
     private router: Router,
     private route: ActivatedRoute) {}
 
@@ -38,26 +37,31 @@ export class RecipeEditComponent implements OnInit {
       this.route.params.subscribe(params => {
         if (params.id) {
           this.id = params.id;
-          this.recipes.get(params.id).then(recipe => this.recipe = recipe, warn());
+          this.recipes.get(params.id).then(recipe => this.recipes.local = recipe, warn());
         } else {
-          this.recipe = new Recipe();
-          this.recipe.parts.push(new Part());
-          this.recipe.steps.push(new Step());
+          if (this.recipes.local.parts.length === 0) {
+            this.recipes.local.parts.push(new Part());
+          }
+          if (this.recipes.local.steps.length === 0) {
+            this.recipes.local.steps.push(new Step());
+          }
         }
       });
     });
   }
 
   save(andNew) {
-    this.recipes.updateOrCreate(this.recipe.id, this.recipe.toJSON()).then(data => {
+    this.recipes.updateOrCreate(this.recipes.local.id, this.recipes.local.toJSON()).then(data => {
+      this.recipes.local = new Recipe();
+      this.recipes.list();
       if (!andNew) { this.router.navigate(['recipes', data]).then(); }
     });
   }
 
   /** Delete the ingredient. */
   delete() {
-    if (this.recipe.id !== null) {
-      this.recipes.delete(this.recipe.id).then(() => {
+    if (this.recipes.local.id !== null) {
+      this.recipes.delete(this.recipes.local.id).then(() => {
         this.router.navigate(['recipes']).then();
       }, warn());
     }

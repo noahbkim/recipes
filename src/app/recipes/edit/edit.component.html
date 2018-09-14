@@ -1,26 +1,25 @@
 <form name="recipe">
-  <input name="name" type="text" class="h1" placeholder="recipe" [(ngModel)]="recipe.name">
-  <textarea name="description" class="p" placeholder="description" [(ngModel)]="recipe.description"></textarea>
+  <input name="name" type="text" class="h1" placeholder="recipe" [(ngModel)]="recipes.local.name">
+  <textarea name="description" class="p" placeholder="description" [(ngModel)]="recipes.local.description"></textarea>
   <h2>ingredients</h2>
   <ul id="ingredients">
-    <li *ngFor="let part of recipe.parts; let i = index">
-      <app-part-editor [part]="part" [add]=makeAdd(recipe.parts) [remove]=makeRemove(recipe.parts) [index]=i>
+    <li *ngFor="let part of recipes.local.parts; let i = index">
+      <app-part-editor [part]="part" [add]=makeAdd(recipes.local.parts) [remove]=makeRemove(recipes.local.parts) [index]=i>
       </app-part-editor>
     </li>
   </ul>
   <h2>steps</h2>
   <ol id="steps">
-    <li *ngFor="let step of recipe.steps; let i = index">
-      <app-step-editor [step]=step [add]=makeAdd(recipe.steps) [remove]=makeRemove(recipe.steps) [index]=i>
+    <li *ngFor="let step of recipes.local.steps; let i = index">
+      <app-step-editor [step]=step [add]=makeAdd(recipes.local.steps) [remove]=makeRemove(recipes.local.steps) [index]=i>
       </app-step-editor>
     </li>
   </ol>
   <h2>notes</h2>
-  <textarea name="notes" class="p" placeholder="notes" [(ngModel)]="recipe.notes"></textarea>
+  <textarea name="notes" class="p" placeholder="notes" [(ngModel)]="recipes.local.notes"></textarea>
   <div class="buttons">
     <span class="button" (click)=[save()]>save</span>
     <span class="button" (click)=[save(true)]>save & new</span>
-    <span *ngIf="recipe.id" class="button" (click)=[delete()]>delete</span>
+    <span *ngIf="recipes.local.id" class="button" (click)=[delete()]>delete</span>
   </div>
 </form>
-

@@ -7,11 +7,15 @@ import { Recipe, Part, Step } from './recipe';
 
 import { API } from '../../variables';
 import { warn } from '../convenience';
+import {Ingredient} from './ingredient';
 
 
 /** The recipe interface for the API server. */
 @Injectable()
 export class RecipeService implements ItemService {
+
+  /** Persist the editing ingredient. */
+  public local: Recipe = new Recipe();
 
   /** Require an HTTP client and ingredients service. */
   constructor(private http: HttpClient, private ingredients: IngredientService) { }
