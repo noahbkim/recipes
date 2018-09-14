@@ -1,7 +1,23 @@
 const express = require("express");
 const models = require("./models.js");
+const passport = require("passport");
 
 const router = express.Router({});
+
+
+function authenticate(req, res, next) {
+  if (req.user) next();
+  else res.json({error: "not authenticated"});
+}
+
+
+/** User routes. */
+router.route("/user")
+
+  /** Login. */
+  .post(passport.authenticate("local"), (req, res) => {
+    res.json(req.user.toJSON());
+  });
 
 
 /** Generic route for listing recipes. */
@@ -25,7 +41,7 @@ router.route("/recipes")
   })
   
   /** Create a recipe. */
-  .post((req, res) => {
+  .post(authenticate, (req, res) => {
     let recipe = new models.Recipe();
     recipe.updateFromRequest(req);
     recipe.save((err) => { 
@@ -50,7 +66,7 @@ router.route("/recipes/:id")
   })
   
   /** Edit a single recipe ID. */
-  .post((req, res) => {
+  .post(authenticate, (req, res) => {
     models.Recipe.findById(req.params.id, (err, recipe) => {
       if (err) { res.status(400).json({error: err.message}); return; }
       if (recipe === null) { res.status(400).json({error: "No such recipe"}); return; }
@@ -62,7 +78,7 @@ router.route("/recipes/:id")
     });
   })
   
-  .delete((req, res) => {
+  .delete(authenticate, (req, res) => {
     models.Recipe.findById(req.params.id, (err, recipe) => {
       if (err) { res.status(400).json({error: err.message}); return; }
       recipe.remove((err) => {
@@ -89,7 +105,7 @@ router.route("/ingredients")
   })
 
   /** Create an ingredient. */
-  .post((req, res) => {
+  .post(authenticate, (req, res) => {
     let ingredient = new models.Ingredient();
     ingredient.updateFromRequest(req);
     ingredient.save((err) => { 
@@ -111,7 +127,7 @@ router.route("/ingredients/:id")
   })
   
   /** Edit a single recipe ID. */
-  .post((req, res) => {
+  .post(authenticate, (req, res) => {
     models.Ingredient.findById(req.params.id, (err, ingredient) => {
       if (err) { res.status(400).json({error: err.message}); return; }
       ingredient.updateFromRequest(req);
@@ -123,7 +139,7 @@ router.route("/ingredients/:id")
   })
 
   /** Delete the ingredient. */  
-  .delete((req, res) => {
+  .delete(authenticate, (req, res) => {
     models.Ingredient.findById(req.params.id, (err, ingredient) => {
       if (err) { res.status(400).json({error: err.message}); return; }
       ingredient.remove((err) => {

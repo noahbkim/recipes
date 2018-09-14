@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const passportLocalMongoose = require('passport-local-mongoose');
 const Schema = mongoose.Schema;
 
 
@@ -59,8 +60,14 @@ RecipeSchema.methods.updateFromRequest = makeUpdateFromRequest(recipeFields);
 RecipeSchema.methods.toJSON = makeToJSON(recipeFields.concat("id"));
 
 
+const UserSchema = new Schema({});
+UserSchema.plugin(passportLocalMongoose);
+UserSchema.methods.toJSON = makeToJSON(["username"]);
+
+
 /** Export the actual models. */
 module.exports = {
   Ingredient: mongoose.model("Ingredient", IngredientSchema),
-  Recipe: mongoose.model("Recipe", RecipeSchema)
+  Recipe: mongoose.model("Recipe", RecipeSchema),
+  User: mongoose.model("User", UserSchema),
 };

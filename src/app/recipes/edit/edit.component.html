@@ -1,5 +1,5 @@
 <form name="recipe">
-  <input name="name" type="text" class="h1" placeholder="name" [(ngModel)]="recipe.name">
+  <input name="name" type="text" class="h1" placeholder="recipe" [(ngModel)]="recipe.name">
   <textarea name="description" class="p" placeholder="description" [(ngModel)]="recipe.description"></textarea>
   <h2>ingredients</h2>
   <ul id="ingredients">
@@ -8,7 +8,7 @@
       </app-part-editor>
     </li>
   </ul>
-  <h2>recipe</h2>
+  <h2>steps</h2>
   <ol id="steps">
     <li *ngFor="let step of recipe.steps; let i = index">
       <app-step-editor [step]=step [add]=makeAdd(recipe.steps) [remove]=makeRemove(recipe.steps) [index]=i>

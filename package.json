@@ -21,7 +21,11 @@
     "@angular/platform-browser": "^5.2.11",
     "@angular/platform-browser-dynamic": "^5.2.11",
     "@angular/router": "^5.2.11",
+    "cookie-parser": "^1.4.3",
     "core-js": "^2.5.7",
+    "express-session": "^1.15.6",
+    "passport": "^0.4.0",
+    "passport-local-mongoose": "^5.0.1",
     "rxjs": "^5.5.11",
     "zone.js": "^0.8.26"
   },

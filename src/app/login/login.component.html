@@ -1,0 +1,8 @@
+<h1>login</h1>
+<form>
+  <input type="text" [(ngModel)]="credentials.username" name="username" placeholder="username">
+  <input id="password" type="password" [(ngModel)]="credentials.password" name="password" placeholder="password">
+  <div class="buttons">
+    <span class="button" (click)="login()">submit</span>
+  </div>
+</form>

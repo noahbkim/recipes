@@ -8,6 +8,8 @@ import { AppComponent } from './app.component';
 
 import { IngredientService } from './api/ingredient.service';
 import { RecipeService } from './api/recipe.service';
+import { UserService } from './api/user.service';
+
 import { IngredientsComponent } from './ingredients/ingredients.component';
 import { RecipesComponent } from './recipes/recipes.component';
 import { IngredientViewComponent } from './ingredients/view/view.component';
@@ -16,18 +18,24 @@ import { RecipeViewComponent } from './recipes/view/view.component';
 import { RecipeEditComponent } from './recipes/edit/edit.component';
 import { PartEditorComponent } from './recipes/edit/part/part.component';
 import { StepEditorComponent } from './recipes/edit/step/step.component';
+import { LoginComponent } from './login/login.component';
+
+import { AuthGuard } from './auth.guard';
+
 
 export const routes = [
   { path: '', redirectTo: 'recipes', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
   { path: 'ingredients', component: IngredientsComponent },
-  { path: 'ingredients/new', component: IngredientEditComponent },
+  { path: 'ingredients/new', component: IngredientEditComponent, canActivate: [AuthGuard] },
   { path: 'ingredients/:id', component: IngredientViewComponent },
-  { path: 'ingredients/:id/edit', component: IngredientEditComponent },
+  { path: 'ingredients/:id/edit', component: IngredientEditComponent, canActivate: [AuthGuard] },
   { path: 'recipes', component: RecipesComponent },
-  { path: 'recipes/new', component: RecipeEditComponent },
+  { path: 'recipes/new', component: RecipeEditComponent, canActivate: [AuthGuard] },
   { path: 'recipes/:id', component: RecipeViewComponent },
-  { path: 'recipes/:id/edit', component: RecipeEditComponent }
+  { path: 'recipes/:id/edit', component: RecipeEditComponent, canActivate: [AuthGuard] }
 ];
+
 
 @NgModule({
   declarations: [
@@ -40,6 +48,7 @@ export const routes = [
     RecipeEditComponent,
     PartEditorComponent,
     StepEditorComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,10 +58,12 @@ export const routes = [
   ],
   providers: [
     IngredientService,
-    RecipeService
+    RecipeService,
+    UserService,
+    AuthGuard,
   ],
   bootstrap: [
-    AppComponent
+    AppComponent,
   ]
 })
 export class AppModule { }
