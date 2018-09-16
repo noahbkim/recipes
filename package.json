@@ -1,9 +1,27 @@
 {
-    "name": "node-api",
-    "main": "server.js",
-    "dependencies": {
-        "body-parser": "^1.18.2",
-        "express": "^4.16.2",
-        "mongoose": "^5.0.0-rc0"
-    }
+  "name": "recipes-server",
+  "version": "1.0.0",
+  "description": "The REST server component of the Recipes ecosystem",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/noahbkim/recipes.git"
+  },
+  "author": "Noah Kim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/noahbkim/recipes/issues"
+  },
+  "homepage": "https://github.com/noahbkim/recipes#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "mongoose": "^5.2.15",
+    "passport": "^0.4.0"
+  }
 }

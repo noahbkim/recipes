@@ -1,6 +1,10 @@
 // mongod --config /usr/local/etc/mongod.conf
-
 const mongoose = require("mongoose");
+const express = require("express");
+const bodyParser = require("body-parser");
+const passport = require("passport");
+const expressSession = require('express-session');
+
 mongoose.connect("mongodb://localhost:27017/recipes", { useNewUrlParser: true }).then(() => {
 
   /* Check if we want to reset the database. */
@@ -21,7 +25,6 @@ mongoose.connect("mongodb://localhost:27017/recipes", { useNewUrlParser: true })
   }
 
   /* Create and configure the app. */
-  const express = require("express");
   const app = express();
   console.log("Created the express server...");
 
@@ -29,14 +32,11 @@ mongoose.connect("mongodb://localhost:27017/recipes", { useNewUrlParser: true })
   app.use(require("cookie-parser")());
 
   /* Setup JSON parser. */
-  const bodyParser = require("body-parser");
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(bodyParser.json());
   console.log("Attached JSON body parser...");
 
   /* Setup authentication. */
-  const passport = require("passport");
-  const expressSession = require('express-session');
   const User = require("./models").User;
   passport.use(User.createStrategy());
   passport.serializeUser(User.serializeUser());
