@@ -1,7 +1,5 @@
-const mongoose = require("mongoose");
-const passportLocalMongoose = require('passport-local-mongoose');
-const Schema = mongoose.Schema;
-
+import * as mongoose from 'mongoose';
+import * as passportLocalMongoose from 'passport-local-mongoose';
 
 /** Generate an updater function. */
 function makeUpdateFromRequest(fields) {
