@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const passportLocalMongoose = require('passport-local-mongoose');
 const Schema = mongoose.Schema;
 
 
@@ -15,12 +16,11 @@ function makeUpdateFromRequest(fields) {
 function makeToJSON(fields) {
   return function() {
     let data = {};
-    for (let field of fields) 
+    for (let field of fields)
       data[field] = this[field];
     return data;
   }
 }
-
 
 /* Schema for a basic ingredient. */
 const IngredientSchema = new Schema({
@@ -33,30 +33,41 @@ const ingredientFields = ["name", "description"];
 IngredientSchema.methods.updateFromRequest = makeUpdateFromRequest(ingredientFields);
 IngredientSchema.methods.toJSON = makeToJSON(ingredientFields.concat("id"));
 
+/** Pretend that a part is a distinct model. */
+const Part = {
+  id: String,
+  amount: String,
+};
+
+/** Same thing for each step. */
+const Step = {
+  description: String,
+};
 
 /** Schema for recipes. */
 const RecipeSchema = new Schema({
   name: {type: String, unique: true},
   description: String,
-  parts: {type: [{
-    id: {type: Schema.Types.ObjectId, ref: "Ingredient", required: true},
-    amount: String,
-  }], validate: [(arr) => arr.length > 0]},
-  steps: {type: [{
-    description: String,
-  }]},
+  parts: {type: [Part], validate: [(arr) => arr.length > 0]},
+  steps: {type: [Step]},
   notes: String,
   starred: Boolean
 });
 
 /* Update and JSON methods. */
-const recipeFields = ["name", "description", "ingredients", "steps", "notes", "starred"];
+const recipeFields = ["name", "description", "parts", "steps", "notes", "starred"];
 RecipeSchema.methods.updateFromRequest = makeUpdateFromRequest(recipeFields);
 RecipeSchema.methods.toJSON = makeToJSON(recipeFields.concat("id"));
+
+
+const UserSchema = new Schema({});
+UserSchema.plugin(passportLocalMongoose);
+UserSchema.methods.toJSON = makeToJSON(["username"]);
 
 
 /** Export the actual models. */
 module.exports = {
   Ingredient: mongoose.model("Ingredient", IngredientSchema),
-  Recipe: mongoose.model("Recipe", RecipeSchema)
-}
+  Recipe: mongoose.model("Recipe", RecipeSchema),
+  User: mongoose.model("User", UserSchema),
+};

@@ -1,12 +1,28 @@
 const express = require("express");
 const models = require("./models.js");
+const passport = require("passport");
 
-const router = express.Router();
+const router = express.Router({});
+
+
+function authenticate(req, res, next) {
+  if (req.user) next();
+  else res.json({error: "not authenticated"});
+}
+
+
+/** User routes. */
+router.route("/user")
+
+  /** Login. */
+  .post(passport.authenticate("local"), (req, res) => {
+    res.json(req.user.toJSON());
+  });
 
 
 /** Generic route for listing recipes. */
 router.route("/recipes")
-  
+
   /** Get an overview of the recipes. */
   .get((req, res) => {
     models.Recipe.find().sort({name: 1}).exec((err, recipes) => {
@@ -15,22 +31,22 @@ router.route("/recipes")
         let data = [];
         for (let recipe of recipes)
           data.push({
-            id: recipe.id, 
+            id: recipe.id,
             name: recipe.name,
-            //description: recipe.description
+            description: recipe.description
           });
         res.json(data);
       }
     })
   })
-  
+
   /** Create a recipe. */
-  .post((req, res) => {
+  .post(authenticate, (req, res) => {
     let recipe = new models.Recipe();
     recipe.updateFromRequest(req);
-    recipe.save((err) => { 
+    recipe.save((err) => {
       if (err) {
-        res.status(400).json({error: err.message}); 
+        res.status(400).json({error: err.message});
         return;
       }
       res.json({id: recipe.id});
@@ -48,9 +64,9 @@ router.route("/recipes/:id")
       res.json(recipe.toJSON());
     });
   })
-  
+
   /** Edit a single recipe ID. */
-  .post((req, res) => {
+  .post(authenticate, (req, res) => {
     models.Recipe.findById(req.params.id, (err, recipe) => {
       if (err) { res.status(400).json({error: err.message}); return; }
       if (recipe === null) { res.status(400).json({error: "No such recipe"}); return; }
@@ -61,11 +77,14 @@ router.route("/recipes/:id")
       });
     });
   })
-  
-  .delete((req, res) => {
-    models.Recipe.remove({ id: req.params.id }, (err) => {
+
+  .delete(authenticate, (req, res) => {
+    models.Recipe.findById(req.params.id, (err, recipe) => {
       if (err) { res.status(400).json({error: err.message}); return; }
-      res.json({});
+      recipe.remove((err) => {
+        if (err) { res.status(400).json({error: err.message}); return; }
+        res.json({});
+      });
     });
   });
 
@@ -79,26 +98,22 @@ router.route("/ingredients")
       else {
         let data = [];
         for (let ingredient of ingredients)
-          data.push({
-            id: ingredient.id, 
-            name: ingredient.name,
-            //description: ingredient.description
-          });
+          data.push(ingredient.toJSON());
         res.json(data);
       }
     });
   })
 
   /** Create an ingredient. */
-  .post((req, res) => {
+  .post(authenticate, (req, res) => {
     let ingredient = new models.Ingredient();
     ingredient.updateFromRequest(req);
-    ingredient.save((err) => { 
+    ingredient.save((err) => {
       if (err) { res.status(400).json({error: err.message}); return; }
       res.json({id: ingredient.id});
     });
   });
-  
+
 /** Specific recipe ID route. */
 router.route("/ingredients/:id")
 
@@ -110,9 +125,9 @@ router.route("/ingredients/:id")
       res.json(ingredient.toJSON());
     });
   })
-  
+
   /** Edit a single recipe ID. */
-  .post((req, res) => {
+  .post(authenticate, (req, res) => {
     models.Ingredient.findById(req.params.id, (err, ingredient) => {
       if (err) { res.status(400).json({error: err.message}); return; }
       ingredient.updateFromRequest(req);
@@ -123,11 +138,14 @@ router.route("/ingredients/:id")
     });
   })
 
-  /** Delete the ingredient. */  
-  .delete((req, res) => {
-    models.Ingredient.remove({ _id: req.params.id }, (err) => {
+  /** Delete the ingredient. */
+  .delete(authenticate, (req, res) => {
+    models.Ingredient.findById(req.params.id, (err, ingredient) => {
       if (err) { res.status(400).json({error: err.message}); return; }
-      res.json({});
+      ingredient.remove((err) => {
+        if (err) { res.status(400).json({error: err.message}); return; }
+        res.json({});
+      });
     });
   });
 
