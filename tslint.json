@@ -10,6 +10,7 @@
     "prefer-template": false,
     "variable-name": false,
     "no-invalid-this": false,
-    "only-arrow-functions": false
+    "only-arrow-functions": false,
+    "newline-per-chained-call": false
   }
 }

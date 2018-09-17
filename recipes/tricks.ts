@@ -13,11 +13,14 @@ export class Modular {
     return Modular.modules[key];
   }
 
-  public start(): void {
-    for (const descriptor of Modular.get(this.constructor.prototype)) {
-      descriptor.value.call(this);
-      console.log('Installed ' + descriptor.value.name);
-    }
+  public initialize(then: Function): void {
+    const descriptors = Modular.get(this.constructor.prototype).slice();
+    const next = () => {
+      if (descriptors.length > 0)
+        descriptors.splice(0, 1)[0].value.call(this, next);
+      else then();
+    };
+    next();
   }
 
 }

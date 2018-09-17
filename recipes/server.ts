@@ -17,33 +17,48 @@ export class Server extends Modular {
   constructor() {
     super();
     this.application = express();
-    this.install();
+  }
+
+  public listen(port: number, then: Function): void {
+    this.application.listen(port, then);
+  }
+
+  @module
+  public mongoose(next: Function): void {
+    mongoose.connect('mongodb://localhost:27017/recipes', { useNewUrlParser: true }).then(() => next());
   }
 
   @module
   public cookieParser(next: Function): void {
     this.application.use(cookieParser());
+    console.log('Installed cookie parser...');
     next();
   }
 
   @module
-  public bodyParser(): void {
+  public bodyParser(next: Function): void {
     this.application.use(bodyParser.urlencoded({extended: true}));
     this.application.use(bodyParser.json());
+    console.log('Installed body parser...');
+    next();
   }
 
   @module
-  public expressSession(): void {
+  public expressSession(next: Function): void {
     this.application.use(expressSession({secret: 'hush hush', resave: true, saveUninitialized: true}));
+    console.log('Installed express session...');
+    next();
   }
 
   @module
-  public passportLocal(): void {
+  public passportLocal(next: Function): void {
     passport.use((UserModel as any).createStrategy());
     passport.serializeUser((UserModel as any).serializeUser());
     passport.deserializeUser((UserModel as any).deserializeUser());
     this.application.use(passport.initialize());
     this.application.use(passport.session());
+    console.log('Installed passport local...');
+    next();
   }
 
   /*@module
