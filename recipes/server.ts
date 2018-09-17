@@ -6,8 +6,7 @@ import * as bodyParser from 'body-parser';
 import * as passport from 'passport';
 import * as expressSession from 'express-session';
 
-// import { User } from './models';
-// import { router } from '../working/router';
+import { UserModel } from './models/user';
 import { Modular, module } from './tricks';
 
 
@@ -22,8 +21,9 @@ export class Server extends Modular {
   }
 
   @module
-  public cookieParser(): void {
+  public cookieParser(next: Function): void {
     this.application.use(cookieParser());
+    next();
   }
 
   @module
@@ -37,14 +37,14 @@ export class Server extends Modular {
     this.application.use(expressSession({secret: 'hush hush', resave: true, saveUninitialized: true}));
   }
 
-  /*@module
-    public passportLocal(): void {
-    passport.use(User.createStrategy());
-    passport.serializeUser(User.serializeUser());
-    passport.deserializeUser(User.deserializeUser());
+  @module
+  public passportLocal(): void {
+    passport.use((UserModel as any).createStrategy());
+    passport.serializeUser((UserModel as any).serializeUser());
+    passport.deserializeUser((UserModel as any).deserializeUser());
     this.application.use(passport.initialize());
     this.application.use(passport.session());
-  }*/
+  }
 
   /*@module
   public configureRouter(): void {

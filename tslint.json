@@ -7,6 +7,9 @@
     "no-trailing-whitespace": false,
     "no-console": false,
     "newline-before-return": false,
-    "prefer-template": false
+    "prefer-template": false,
+    "variable-name": false,
+    "no-invalid-this": false,
+    "only-arrow-functions": false
   }
 }

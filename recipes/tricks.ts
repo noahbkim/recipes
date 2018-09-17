@@ -1,3 +1,4 @@
+/** Stores tracked instance methods and provides an installation method. */
 export class Modular {
 
   private static modules: Map<any, Array<any>> = {} as Map<any, Array<any>>;
@@ -12,7 +13,7 @@ export class Modular {
     return Modular.modules[key];
   }
 
-  public install(): void {
+  public start(): void {
     for (const descriptor of Modular.get(this.constructor.prototype)) {
       descriptor.value.call(this);
       console.log('Installed ' + descriptor.value.name);
@@ -21,6 +22,8 @@ export class Modular {
 
 }
 
+
+/** Track module instance methods via decorators. */
 export function module(target: any, propertyKey: string, descriptor: PropertyDescriptor): void {
   Modular.add(target.constructor.prototype, descriptor);
 }
