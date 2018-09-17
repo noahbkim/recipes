@@ -1,7 +1,7 @@
 /** Stores tracked instance methods and provides an installation method. */
 export class Modular {
 
-  private static modules: Map<any, Array<any>> = {} as Map<any, Array<any>>;
+  private static modules: Map<any, Array<PropertyDescriptor>> = {} as Map<any, Array<PropertyDescriptor>>;
 
   public static add(key: any, descriptor: any): void {
     if (!Modular.modules.hasOwnProperty(key))
