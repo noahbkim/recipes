@@ -8,6 +8,7 @@ import * as expressSession from 'express-session';
 
 import { UserModel } from './models/user';
 import { Modular, module } from './tricks';
+import { router } from './router';
 
 
 export class Server extends Modular {
@@ -61,9 +62,11 @@ export class Server extends Modular {
     next();
   }
 
-  /*@module
-  public configureRouter(): void {
+  @module
+  public configureRouter(next: Function): void {
     this.application.use('/api', router);
-  }*/
+    console.log('Installed the URL router...');
+    next();
+  }
 
 }
