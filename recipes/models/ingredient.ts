@@ -10,7 +10,7 @@ export interface Ingredient extends Document {
 
 const IngredientSchema: Schema = new Schema({
   name: {type: String, unique: true},
-  description: String
+  description: {type: String}
 });
 
 IngredientSchema.methods.toJSON = function(): {} {
@@ -20,7 +20,7 @@ IngredientSchema.methods.toJSON = function(): {} {
   };
 };
 
-IngredientSchema.methods.validate = function(data: any): Ingredient {
+IngredientSchema.methods.fromJSON = function(data: any): Ingredient {
   const ingredient = new IngredientModel();
   ingredient.name = asNotEmpty(asString(data.name, 'invalid name'), 'empty name');
   ingredient.description = asOptionalString(data.description);

@@ -43,31 +43,55 @@ router.route('/recipes')
 
   /** When a user requests a recipe, return the JSON dump. */
   .get((request: Request, response: Response) => {
-    RecipeModel.find().sort({name: 1}).exec((error: Error, recipes: Array<Recipe>) => {
-      if (error)
-        return response.status(400).json({error: error.message});
-      response.json(recipes.map(recipe => recipe.toJSON({preview: true})));
-    });
+    RecipeModel.find().exec().then(
+      (recipes: Array<Recipe>) =>
+        response.json(recipes.map(recipe => recipe.toJSON({preview: true}))),
+      (error: Error) =>
+        response.status(400).json({error: error.message}));
   })
 
   /** Validate and return the recipe. */
   .post(authenticate, (request: Request, response: Response) => {
     let recipe: Recipe;
     try {
-      recipe = (RecipeModel as any).validate(request.body);
+      recipe = (RecipeModel as any).fromJSON(request.body);
     } catch (error) { return response.json({error}); }
     recipe.save().then(
-      () => response.json({id: recipe.id}),
+      () => {
+        response.json({id: recipe.id});
+        (EditedModel as any).update('recipes');
+      },
       (error: Error) => response.json({error}));
   });
 
 
+/** Check the last edited time of the recipes list. */
+router.route('/recipes/edited')
+  .get((request: Request, response: Response) => {
+    EditedModel.findOne({name: 'recipes'}).exec().then(
+      (edited: Edited) => response.json(edited.toJSON()),
+      () => response.status(404).json({error: 'edited record not found'})
+    );
+  });
+
+
+router.route('/ingredients')
+
+  /** Return the JSON dump of all ingredients. */
+  .get((request: Request, response: Response) => {
+    IngredientModel.find()
+  });
+
 /*
 
 /recipes
-  /:id
-  /edit
-    /:id
+  GET list of recipes
+  POST new recipe
+
+/recipes/:id
+  GET a recipe
+  POST edit a recipe
+  DELETE delete a recipe
 
 /ingredients
   /:id

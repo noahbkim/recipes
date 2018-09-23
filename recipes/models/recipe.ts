@@ -39,11 +39,11 @@ const StepSchema = {
 
 const RecipeSchema: Schema = new Schema({
   name: {type: String, unique: true},
-  description: String,
-  parts: [PartSchema],
-  steps: [StepSchema],
-  notes: String,
-  tags: [String]
+  description: {type: String},
+  parts: {type: [PartSchema]},
+  steps: {type: [StepSchema]},
+  notes: {type: String},
+  tags: {type: [String]}
 });
 
 RecipeSchema.methods.toJSON = function(options?: PreviewDocumentToObjectOptions): {} {
@@ -60,7 +60,7 @@ RecipeSchema.methods.toJSON = function(options?: PreviewDocumentToObjectOptions)
   };
 };
 
-RecipeSchema.statics.validate = function(data: any): Recipe {
+RecipeSchema.statics.fromJSON = function(data: any): Recipe {
   const recipe = new RecipeModel();
   recipe.name = asNotEmpty(asString(data.name, 'invalid name'), 'empty name');
   recipe.description = asOptionalString(data.description);

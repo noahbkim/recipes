@@ -1,4 +1,4 @@
-import { Document, Model, model, Schema } from 'mongoose';
+import { Document, Model, model, Schema,  } from 'mongoose';
 
 
 export interface Edited extends Document {
@@ -9,7 +9,7 @@ export interface Edited extends Document {
 
 const EditedSchema: Schema = new Schema({
   name: {type: String, unique: true},
-  edited: Date
+  edited: {type: Date}
 });
 
 EditedSchema.methods.toJSON = function(): {} {
@@ -19,4 +19,17 @@ EditedSchema.methods.toJSON = function(): {} {
   };
 };
 
-export const EditedModel: Model<Edited> = model<Edited>('Ingredient', EditedSchema);
+EditedSchema.statics.update = function(name: string): Promise<void> {
+  return new Promise<void>((resolve: Function, reject: Function) => {
+    const update = (edited: Edited) => {
+      edited.edited = new Date();
+      edited.save().then(() => resolve(), () => reject());
+    };
+    EditedModel.findOne({name}).exec().then(
+      update,
+      () => update(new EditedModel({name}))
+    );
+  });
+};
+
+export const EditedModel: Model<Edited> = model<Edited>('Edited', EditedSchema);

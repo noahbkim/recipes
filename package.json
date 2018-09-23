@@ -2,7 +2,7 @@
   "name": "recipes-server",
   "version": "1.0.0",
   "description": "The REST server component of the Recipes ecosystem",
-  "main": "recipes/server.js",
+  "main": "recipes/main.ts",
   "scripts": {
     "build": "tsc",
     "start": "ts-node recipes/main.ts",
