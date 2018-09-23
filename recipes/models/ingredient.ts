@@ -1,4 +1,5 @@
 import { Document, Model, model, Schema } from 'mongoose';
+import { asNotEmpty, asOptionalString, asString } from '../validators';
 
 
 export interface Ingredient extends Document {
@@ -17,6 +18,13 @@ IngredientSchema.methods.toJSON = function(): {} {
     name: this.name,
     description: this.description
   };
+};
+
+IngredientSchema.methods.validate = function(data: any): Ingredient {
+  const ingredient = new IngredientModel();
+  ingredient.name = asNotEmpty(asString(data.name, 'invalid name'), 'empty name');
+  ingredient.description = asOptionalString(data.description);
+  return ingredient;
 };
 
 export const IngredientModel: Model<Ingredient> = model<Ingredient>('Ingredient', IngredientSchema);

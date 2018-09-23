@@ -8,6 +8,8 @@ import { Edited, EditedModel } from './models/edited';
 import { Ingredient, IngredientModel } from './models/ingredient';
 import { Recipe, RecipeModel } from './models/recipe';
 
+import { asNotEmpty, asOptionalString, asString } from './validators';
+
 
 export const router = Router();
 
@@ -20,6 +22,7 @@ function authenticate(request: Request, response: Response, next: Function): voi
 /** Respond to a login POST request. */
 router.route('/user/login')
   .post(passport.authenticate('local'), (request: Request, response: Response) => {
+    console.log('Login!');
     response.json(request.user.toJSON());
   });
 
@@ -47,8 +50,15 @@ router.route('/recipes')
     });
   })
 
+  /** Validate and return the recipe. */
   .post(authenticate, (request: Request, response: Response) => {
-
+    let recipe: Recipe;
+    try {
+      recipe = (RecipeModel as any).validate(request.body);
+    } catch (error) { return response.json({error}); }
+    recipe.save().then(
+      () => response.json({id: recipe.id}),
+      (error: Error) => response.json({error}));
   });
 
 

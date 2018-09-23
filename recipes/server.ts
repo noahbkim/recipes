@@ -26,7 +26,9 @@ export class Server extends Modular {
 
   @module
   public mongoose(next: Function): void {
-    mongoose.connect('mongodb://localhost:27017/recipes', { useNewUrlParser: true }).then(() => next());
+    mongoose.connect('mongodb://localhost:27017/recipes', { useNewUrlParser: true }).then(
+      () => next(),
+      () => console.log('Failed to connect to database!'));
   }
 
   @module
