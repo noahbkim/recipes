@@ -44,10 +44,8 @@ router.route('/recipes')
   /** When a user requests a recipe, return the JSON dump. */
   .get((request: Request, response: Response) => {
     RecipeModel.find().exec().then(
-      (recipes: Array<Recipe>) =>
-        response.json(recipes.map(recipe => recipe.toJSON({preview: true}))),
-      (error: Error) =>
-        response.status(400).json({error: error.message}));
+      (recipes: Array<Recipe>) => response.json(recipes.map(recipe => recipe.toJSON({preview: true}))),
+      (error: Error) => response.status(400).json({error: error.message}));
   })
 
   /** Validate and return the recipe. */
@@ -56,21 +54,19 @@ router.route('/recipes')
     try {
       recipe = (RecipeModel as any).fromJSON(request.body);
     } catch (error) { return response.json({error}); }
-    recipe.save().then(
-      () => {
-        response.json({id: recipe.id});
-        (EditedModel as any).update('recipes');
-      },
-      (error: Error) => response.json({error}));
+    recipe.save().then(() => {
+      response.json({id: recipe.id});
+      (EditedModel as any).update('recipes');
+    }, (error: Error) => response.json({error}));
   });
 
 
 /** Check the last edited time of the recipes list. */
 router.route('/recipes/edited')
   .get((request: Request, response: Response) => {
-    EditedModel.findOne({name: 'recipes'}).exec().then(
+    (EditedModel as any).get('recipes').then(
       (edited: Edited) => response.json(edited.toJSON()),
-      () => response.status(404).json({error: 'edited record not found'})
+      (error: Error) => response.json({error})
     );
   });
 
@@ -79,7 +75,7 @@ router.route('/ingredients')
 
   /** Return the JSON dump of all ingredients. */
   .get((request: Request, response: Response) => {
-    IngredientModel.find()
+
   });
 
 /*
