@@ -76,10 +76,11 @@ router.route('/recipes')
 
   /** When a user requests a recipe, return the JSON dump. */
   .get((request: Request, response: Response) => {
-    RecipeModel.find().exec().then(
-      (recipes: Array<Recipe>) => response.json(
-        recipes.map(recipe => recipe.toJSON({preview: true}))),
-      (error: Error) => response.status(400).json({error: error.message}));
+    RecipeModel.find().exec().then((recipes: Array<Recipe>) => {
+      response.json(recipes.map(recipe => recipe.toJSON({preview: true})));
+    }).catch(() => {
+      response.status(400).json({error: 'database error'});
+    });
   })
 
   /** Validate and return the recipe. */
@@ -87,21 +88,30 @@ router.route('/recipes')
     let recipe: Recipe;
     try {
       recipe = (RecipeModel as any).fromJSON(request.body);
-    } catch (error) { return response.json({error}); }
+    } catch (error) {
+      response.status(400).json({error});
+      return;
+    }
     recipe.save().then(() => {
-      response.json({id: recipe.id});
-      (EditedModel as any).update('recipes');
-    }, (error: Error) => response.json({error}));
+      (EditedModel as any).update('recipes').then(() => {
+        response.json(recipe.toJSON({preview: true}));
+      }).catch(() => {
+        response.status(401).json({error: 'database error'});
+      });
+    }).catch( (error: Error) => {
+      response.status(401).json({error});
+    });
   });
 
 
 /** Check the last edited time of the recipes list. */
 router.route('/recipes/edited')
   .get((request: Request, response: Response) => {
-    (EditedModel as any).get('recipes').then(
-      (edited: Edited) => response.json(edited.toJSON()),
-      (error: Error) => response.json({error})
-    );
+    (EditedModel as any).get('recipes').then((edited: Edited) => {
+      return response.json(edited.toJSON());
+    }).catch((error: Error) => {
+      response.json({error});
+    });
   });
 
 
@@ -128,7 +138,47 @@ router.route('/ingredients')
 
   /** Return the JSON dump of all ingredients. */
   .get((request: Request, response: Response) => {
+    IngredientModel.find().exec().then((ingredients: Array<Ingredient>) => {
+      response.json(ingredients.map(ingredient => ingredient.toJSON()));
+    }).catch(() => {
+      response.status(400).json({error: 'database error'});
+    });
+  })
 
+  /** Create a new ingredient. */
+  .post(authenticate, (request: Request, response: Response) => {
+    let ingredient: Ingredient;
+    try {
+      ingredient = (IngredientModel as any).fromJSON(request.body);
+    } catch (error) {
+      response.status(400).json({error});
+      return;
+    }
+    ingredient.save().then(() => {
+      (EditedModel as any).update('ingredients').then(() => {
+        response.json(ingredient.toJSON());
+      }).catch(() => {
+        response.status(401).json({error: 'database error'});
+      });
+    }).catch( () => {
+      response.status(401).json({error: 'database error'});
+    });
+  });
+
+/** Get, edit, or delete a specific recipe. */
+router.route('/ingredients/:id')
+
+  /** Get a specific recipe. */
+  .get((request: Request, response: Response) => {
+    IngredientModel.findById(request.params.id).then(ingredient => {
+      if (ingredient) {
+        response.json(ingredient.toJSON());
+      } else {
+        response.status(404).json({});
+      }
+    }).catch(() => {
+      response.status(401).json({error: 'database error'});
+    });
   });
 
 /*

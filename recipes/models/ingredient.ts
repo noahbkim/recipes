@@ -15,12 +15,13 @@ const IngredientSchema: Schema = new Schema({
 
 IngredientSchema.methods.toJSON = function(): {} {
   return {
+    id: this.id,
     name: this.name,
     description: this.description
   };
 };
 
-IngredientSchema.methods.fromJSON = function(data: any): Ingredient {
+IngredientSchema.statics.fromJSON = function(data: any): Ingredient {
   const ingredient = new IngredientModel();
   ingredient.name = asNotEmpty(asString(data.name, 'invalid name'), 'empty name');
   ingredient.description = asOptionalString(data.description);

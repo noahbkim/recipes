@@ -133,7 +133,7 @@
     ],
     "eofline": true,
     "curly": [
-      true,
+      false,
       "as-needed"
     ],
     "whitespace": [

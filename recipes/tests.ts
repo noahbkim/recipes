@@ -1,7 +1,7 @@
 import * as request from 'supertest';
 
 import { Server } from './server';
-import { Tracker } from './library/eventful';
+import { Dispatcher } from './library/eventful';
 
 
 const server = new Server('recipes-test');
@@ -30,12 +30,12 @@ const RECIPE = {
   name: 'water',
   description: 'a timeless classic',
   parts: [],
-  steps: ['pour into glass'],
+  steps: [{description: 'pour into glass'}],
   notes: ['best served cold'],
   tags: ['basic', 'virgin']
 };
 
-const tracker = new Tracker();
+const dispatcher = new Dispatcher();
 
 
 describe('recipes', () => {
@@ -47,7 +47,7 @@ describe('recipes', () => {
       agent
         .get('/api/session')
         .expect(403)
-        .end(done);
+        .then(() => done());
     });
 
     it('should allow user creation without authentication', done => {
@@ -56,21 +56,21 @@ describe('recipes', () => {
         .send({username: USERNAME, password: PASSWORD})
         .expect(200)
         .expect(({body}) => body.username === USERNAME)
-        .end(() => {
+        .then(() => {
           done();
-          tracker.complete('create user');
+          dispatcher.complete('create user');
         });
     });
 
     describe('wait for user to be created', () => {
-      before(() => tracker.wait('create user'));
+      before(() => dispatcher.wait('create user'));
 
       it('should fail because credentials are invalid', done => {
         agent
           .post('/api/session')
           .send({username: USERNAME, password: INCORRECT})
           .expect(401)
-          .end(done);
+          .then(() => done());
       });
 
       it('should allow the user to login', done => {
@@ -79,20 +79,55 @@ describe('recipes', () => {
           .send({username: USERNAME, password: PASSWORD})
           .expect(200)
           .expect(({body}) => body.username === USERNAME)
-          .end(() => {
+          .then(() => {
             done();
-            tracker.complete('login');
+            dispatcher.complete('login');
           });
       });
 
-      describe('wait for user to login', () => {
-        before(() => tracker.wait('login'));
+    });
 
-        it('should create the ingredient', done => {
-          agent
-            .post('/')
-        });
+    describe('wait for user to login', () => {
+      before(() => dispatcher.wait('login'));
 
+      it('should create the ingredient', done => {
+        agent
+          .post('/api/ingredients')
+          .send(INGREDIENT)
+          .expect(200)
+          .then(response => {
+            done();
+            dispatcher.complete('create ingredient', response.body.id);
+          });
+      });
+
+    });
+
+    let ingredientId;
+
+    describe('wait for ingredient to be created', () => {
+      before(() => dispatcher.wait('create ingredient').then(id => {
+        ingredientId = id;
+        RECIPE.parts.push({ingredient: id, amount: '10 oz'});
+      }));
+
+      it('should get the ingredient', done => {
+        agent
+          .get(`/api/ingredients/${ingredientId}`)
+          .expect(200)
+          .expect(({body}) => body.name === INGREDIENT.name && body.description === INGREDIENT.description)
+          .then(() => done());
+      });
+
+      it('should create the recipe', done => {
+        agent
+          .post('/api/recipes')
+          .send(RECIPE)
+          .expect(200)
+          .then(response => {
+            done();
+            dispatcher.complete('create recipe', response.body.id);
+          });
       });
 
     });

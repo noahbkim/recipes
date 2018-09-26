@@ -9,7 +9,7 @@ interface PreviewDocumentToObjectOptions extends DocumentToObjectOptions {
 
 
 export interface Part {
-  id: string;
+  ingredient: string;
   amount: string;
 }
 
@@ -48,9 +48,11 @@ const RecipeSchema: Schema = new Schema({
 
 RecipeSchema.methods.toJSON = function(options?: PreviewDocumentToObjectOptions): {} {
   return options.preview ? {
+    id: this.id,
     name: this.name,
     description: this.description
   } : {
+    id: this.id,
     name: this.name,
     description: this.description,
     parts: this.parts,
@@ -65,7 +67,7 @@ RecipeSchema.statics.fromJSON = function(data: any): Recipe {
   recipe.name = asNotEmpty(asString(data.name, 'invalid name'), 'empty name');
   recipe.description = asOptionalString(data.description);
   recipe.parts = asArray(data.parts, 'invalid parts').map((value: any) => ({
-    id: asNotEmpty(asString(value.id)),
+    ingredient: asNotEmpty(asString(value.ingredient)),
     amount: asNotEmpty(asString(value.amount))
   }));
   recipe.steps = asArray(data.steps, 'invalid steps').map((value: any) => ({
