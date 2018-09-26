@@ -5,10 +5,11 @@
   "main": "recipes/main.ts",
   "scripts": {
     "build": "tsc",
-    "start": "ts-node recipes/main.ts",
-    "dev": "nodemon ./dist/server.js",
-    "prod": "npm run build && npm run start",
-    "mongod": "mongod --config /usr/local/etc/mongod.conf"
+    "tests": "mocha -r ts-node/register recipes/tests.ts",
+    "serve": "ts-node recipes/main.ts",
+    "listen": "nodemon ./dist/main.js",
+    "production": "npm run build && npm run serve",
+    "mongodb": "mongod --config /usr/local/etc/mongod.conf"
   },
   "repository": {
     "type": "git",
@@ -22,17 +23,20 @@
   "homepage": "https://github.com/noahbkim/recipes#readme",
   "dependencies": {
     "@types/express": "^4.16.0",
+    "@types/mocha": "^5.2.5",
     "@types/mongodb": "^3.1.7",
     "@types/mongoose": "^5.2.13",
-    "angular-tslint-rules": "^1.5.0",
+    "@types/supertest": "^2.0.6",
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "mocha": "^5.2.0",
     "mongoose": "^5.2.15",
     "nodemon": "^1.18.4",
     "passport": "^0.4.0",
     "passport-local-mongoose": "^5.0.1",
+    "supertest": "^3.3.0",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "typescript": "^3.0.3"
