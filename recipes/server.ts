@@ -27,14 +27,26 @@ export class Server extends Modular {
   }
 
   public flush(then: Function): void {
-    mongoose.connection.db.dropDatabase().then(() => then());
+    mongoose.connection.db.dropDatabase().then(
+      () => then(),
+      () => console.log('error dropping database!'));
+  }
+
+  public disconnect(then: Function): void {
+    mongoose.connection.close().then(
+      () => then(),
+      () => console.log('error disconnecting!'));
   }
 
   @module
   public mongoose(next: Function): void {
     mongoose.connect(`mongodb://localhost:27017/${this.database}`, { useNewUrlParser: true }).then(
-      () => next(),
+      () => {
+        mongoose.connection.on('error', () => console.log('mongoose error!'));
+        next();
+      },
       () => console.log('failed to connect to database!'));
+    console.log('installed database...');
   }
 
   @module

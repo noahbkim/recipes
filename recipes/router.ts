@@ -13,27 +13,52 @@ export const router = Router();
 
 function authenticate(request: Request, response: Response, next: Function): void {
   if (request.user) next();
-  else response.json({error: 'not authenticated'});
+  else response.status(401).json({error: 'not authenticated'});
 }
 
 
-/** Respond to a login POST request. */
-router.route('/user/login')
-  .post(passport.authenticate('local'), (request: Request, response: Response) => {
-    console.log('Login!');
-    response.json(request.user.toJSON());
-  });
+/** Login and logout routes with obfuscation. */
+router.route('/authenticate')
 
-/** Logout a user. */
-router.route('/user/logout')
-  .post(authenticate, (request: Request, response: Response) => {
+  /** Check whether or not any users exist to authenticate as. */
+  .get((request: Request, response: Response) => {
+    UserModel.count({}).then(count => {
+      response.status(count === 0 ? 403 : 200).json({});
+    }, response.status(400).json({error: 'database error'}));
+  })
+
+  /** Login and create a session. */
+  .post(passport.authenticate('local'), (request: Request, response: Response) => {
+    response.json(request.user.toJSON());
+  })
+
+  /** Logout and delete the session. */
+  .delete(authenticate, (request: Request, response: Response) => {
     request.logout().then(() => response.send({}));
   });
 
+
 /** Get information about the user. */
 router.route('/user')
+
+  /** Get information about the user. */
   .get(authenticate, (request: Request, response: Response) => {
     response.json(request.user.toJSON());
+  })
+
+  /** Create a user, allow anyone to create a user if there are none in the database. */
+  .post((request: Request, response: Response) => {
+    const create = () => {
+      const user = (UserModel as any).fromJSON(request.body);
+      user.save();
+      response.json(user.toJSON());
+    };
+    if (response.user) create();
+    else UserModel.count({}).then(count => {
+      if (count === 0)
+        create();
+      else response.status(401).json({error: 'not authenticated'});
+    });
   });
 
 
