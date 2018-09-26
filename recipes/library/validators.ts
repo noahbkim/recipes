@@ -8,7 +8,7 @@ export function asOptionalString(value: any): string {
 }
 
 export function asString(value: any, error = 'invalid string'): string {
-  if (!(value instanceof String))
+  if (Object.prototype.toString.call(value) !== '[object String]')
     throw error;
   return value as string;
 }
@@ -26,7 +26,7 @@ export function asOptionalArray(value: any): Array<any> {
 }
 
 export function asArray(value: any, error = 'invalid array'): Array<any> {
-  if (!(value instanceof Array))
+  if (Object.prototype.toString.call(value) !== '[object Array]')
     throw error;
   return value;
 }

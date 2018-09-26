@@ -18,13 +18,15 @@ function authenticate(request: Request, response: Response, next: Function): voi
 
 
 /** Login and logout routes with obfuscation. */
-router.route('/authenticate')
+router.route('/session')
 
   /** Check whether or not any users exist to authenticate as. */
   .get((request: Request, response: Response) => {
-    UserModel.count({}).then(count => {
+    UserModel.countDocuments().then(count => {
       response.status(count === 0 ? 403 : 200).json({});
-    }, response.status(400).json({error: 'database error'}));
+    }).catch( () => {
+      response.status(400).json({error: 'database error'});
+    });
   })
 
   /** Login and create a session. */
@@ -49,15 +51,25 @@ router.route('/user')
   /** Create a user, allow anyone to create a user if there are none in the database. */
   .post((request: Request, response: Response) => {
     const create = () => {
-      const user = (UserModel as any).fromJSON(request.body);
-      user.save();
-      response.json(user.toJSON());
+      let user;
+      try {
+        user = (UserModel as any).fromJSON(request.body);
+      } catch (error) {
+        response.status(400).json({error: 'invalid username'});
+        return;
+      }
+      user.save().then(() => {
+        response.json(user.toJSON());
+      }).catch(() => {
+        response.status(400).json({error: 'database error'});
+      });
     };
     if (response.user) create();
-    else UserModel.count({}).then(count => {
-      if (count === 0)
-        create();
+    else UserModel.countDocuments().then(count => {
+      if (count === 0) create();
       else response.status(401).json({error: 'not authenticated'});
+    }).catch(() => {
+      response.status(400).json({error: 'database error'});
     });
   });
 

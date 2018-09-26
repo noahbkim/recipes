@@ -15,10 +15,10 @@ UserSchema.methods.toJSON = function(): {} {
   return {username: this.username};
 };
 
-UserSchema.methods.fromJSON = function(data: any): User {
+UserSchema.statics.fromJSON = function(data: any): User {
   const user = new UserModel();
   user.username = asNotEmpty(asString(data.username, 'invalid name'), 'empty name');
-  (user as any).password = asNotEmpty(asString(data.password), 'empty password');
+  (user as any).setPassword(asNotEmpty(asString(data.password), 'empty password'));
   return user;
 };
 
