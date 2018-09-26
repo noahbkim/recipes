@@ -15,11 +15,20 @@ UserSchema.methods.toJSON = function(): {} {
   return {username: this.username};
 };
 
-UserSchema.statics.fromJSON = function(data: any): User {
-  const user = new UserModel();
-  user.username = asNotEmpty(asString(data.username, 'invalid name'), 'empty name');
-  (user as any).setPassword(asNotEmpty(asString(data.password), 'empty password'));
-  return user;
+UserSchema.statics.fromJSON = function(data: any): Promise<User> {
+  return new Promise((resolve, reject) => {
+    const user = new UserModel();
+    try {
+      user.username = asNotEmpty(asString(data.username, 'invalid name'), 'empty name');
+      (user as any).setPassword(asNotEmpty(asString(data.password), 'empty password')).then(() => {
+        resolve(user);
+      }).catch(() => {
+        reject('database error');
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
 };
 
 export const UserModel: Model<User> = model<User>('User', UserSchema);

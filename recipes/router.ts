@@ -51,17 +51,14 @@ router.route('/user')
   /** Create a user, allow anyone to create a user if there are none in the database. */
   .post((request: Request, response: Response) => {
     const create = () => {
-      let user;
-      try {
-        user = (UserModel as any).fromJSON(request.body);
-      } catch (error) {
-        response.status(400).json({error: 'invalid username'});
-        return;
-      }
-      user.save().then(() => {
-        response.json(user.toJSON());
-      }).catch(() => {
-        response.status(400).json({error: 'database error'});
+      (UserModel as any).fromJSON(request.body).then(user => {
+        user.save().then(() => {
+          response.json(user.toJSON());
+        }).catch(() => {
+          response.status(400).json({error: 'database error'});
+        });
+      }).catch(error => {
+        response.status(400).json({error});
       });
     };
     if (response.user) create();
