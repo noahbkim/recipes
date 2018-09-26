@@ -31,7 +31,7 @@ const RECIPE = {
   description: 'a timeless classic',
   parts: [],
   steps: [{description: 'pour into glass'}],
-  notes: ['best served cold'],
+  notes: 'best served cold',
   tags: ['basic', 'virgin']
 };
 
@@ -62,76 +62,91 @@ describe('recipes', () => {
         });
     });
 
-    describe('wait for user to be created', () => {
-      before(() => dispatcher.wait('create user'));
+  });
 
-      it('should fail because credentials are invalid', done => {
-        agent
-          .post('/api/session')
-          .send({username: USERNAME, password: INCORRECT})
-          .expect(401)
-          .then(() => done());
-      });
+  describe('test user authentication', () => {
+    before(() => dispatcher.wait('create user'));
 
-      it('should allow the user to login', done => {
-        agent
-          .post('/api/session')
-          .send({username: USERNAME, password: PASSWORD})
-          .expect(200)
-          .expect(({body}) => body.username === USERNAME)
-          .then(() => {
-            done();
-            dispatcher.complete('login');
-          });
-      });
-
+    it('should fail because credentials are invalid', done => {
+      agent
+        .post('/api/session')
+        .send({username: USERNAME, password: INCORRECT})
+        .expect(401)
+        .then(() => done());
     });
 
-    describe('wait for user to login', () => {
-      before(() => dispatcher.wait('login'));
-
-      it('should create the ingredient', done => {
-        agent
-          .post('/api/ingredients')
-          .send(INGREDIENT)
-          .expect(200)
-          .then(response => {
-            done();
-            dispatcher.complete('create ingredient', response.body.id);
-          });
-      });
-
+    it('should allow the user to login', done => {
+      agent
+        .post('/api/session')
+        .send({username: USERNAME, password: PASSWORD})
+        .expect(200)
+        .expect(({body}) => body.username === USERNAME)
+        .then(() => {
+          done();
+          dispatcher.complete('login');
+        });
     });
 
-    let ingredientId;
+  });
 
-    describe('wait for ingredient to be created', () => {
-      before(() => dispatcher.wait('create ingredient').then(id => {
-        ingredientId = id;
-        RECIPE.parts.push({ingredient: id, amount: '10 oz'});
-      }));
+  describe('create ingredient', () => {
+    before(() => dispatcher.wait('login'));
 
-      it('should get the ingredient', done => {
-        agent
-          .get(`/api/ingredients/${ingredientId}`)
-          .expect(200)
-          .expect(({body}) => body.name === INGREDIENT.name && body.description === INGREDIENT.description)
-          .then(() => done());
-      });
-
-      it('should create the recipe', done => {
-        agent
-          .post('/api/recipes')
-          .send(RECIPE)
-          .expect(200)
-          .then(response => {
-            done();
-            dispatcher.complete('create recipe', response.body.id);
-          });
-      });
-
+    it('should create the ingredient', done => {
+      agent
+        .post('/api/ingredients')
+        .send(INGREDIENT)
+        .expect(200)
+        .then(response => {
+          done();
+          dispatcher.complete('create ingredient', response.body.id);
+        });
     });
 
+  });
+
+  let ingredientId;
+
+  describe('test stored ingredient and create recipe', () => {
+    before(() => dispatcher.wait('create ingredient').then(id => {
+      ingredientId = id;
+      RECIPE.parts.push({ingredient: id, amount: '10 oz'});
+    }));
+
+    it('should get the ingredient', done => {
+      agent
+        .get(`/api/ingredients/${ingredientId}`)
+        .expect(200)
+        .expect(({body}) => body.name === INGREDIENT.name && body.description === INGREDIENT.description)
+        .then(() => done());
+    });
+
+    it('should create the recipe', done => {
+      agent
+        .post('/api/recipes')
+        .send(RECIPE)
+        .expect(200)
+        .expect(({body}) => body.name === RECIPE.name && body.description === RECIPE.description)
+        .then(response => {
+          done();
+          dispatcher.complete('create recipe', response.body.id);
+        });
+    });
+
+  });
+
+  let recipeId;
+
+  describe('test stored recipe', () => {
+    before(() => dispatcher.wait('create recipe').then(id => recipeId = id));
+
+    it('should get the recipe', done => {
+      agent
+        .get(`/api/recipes/${recipeId}`)
+        .expect(200)
+        .expect(({body}) => body.name === RECIPE.name && body.notes === RECIPE.notes)
+        .then(() => done());
+    });
   });
 
 });

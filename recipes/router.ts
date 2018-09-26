@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { Error } from 'mongoose';
 import { Request, Response } from 'passport-local-mongoose';
 import * as passport from 'passport';
 
@@ -16,6 +15,13 @@ function authenticate(request: Request, response: Response, next: Function): voi
   else response.status(401).json({error: 'not authenticated'});
 }
 
+const ERROR = {
+  DATABASE: 'database error',
+  AUTHENTICATION: 'not authenticated'
+};
+
+const DEBUG = true;
+
 
 /** Login and logout routes with obfuscation. */
 router.route('/session')
@@ -24,8 +30,8 @@ router.route('/session')
   .get((request: Request, response: Response) => {
     UserModel.countDocuments().then(count => {
       response.status(count === 0 ? 403 : 200).json({});
-    }).catch( () => {
-      response.status(400).json({error: 'database error'});
+    }).catch( error => {
+      response.status(500).json({error: DEBUG ? error : ERROR.DATABASE});
     });
   })
 
@@ -54,8 +60,9 @@ router.route('/user')
       (UserModel as any).fromJSON(request.body).then(user => {
         user.save().then(() => {
           response.json(user.toJSON());
-        }).catch(() => {
-          response.status(400).json({error: 'database error'});
+        }).catch(error => {
+          if (DEBUG) console.error(error);
+          response.status(500).json({error: ERROR.DATABASE});
         });
       }).catch(error => {
         response.status(400).json({error});
@@ -64,9 +71,10 @@ router.route('/user')
     if (response.user) create();
     else UserModel.countDocuments().then(count => {
       if (count === 0) create();
-      else response.status(401).json({error: 'not authenticated'});
-    }).catch(() => {
-      response.status(400).json({error: 'database error'});
+      else response.status(401).json({error: ERROR.AUTHENTICATION});
+    }).catch(error => {
+      if (DEBUG) console.error(error);
+      response.status(500).json({error: ERROR.DATABASE});
     });
   });
 
@@ -78,8 +86,9 @@ router.route('/recipes')
   .get((request: Request, response: Response) => {
     RecipeModel.find().exec().then((recipes: Array<Recipe>) => {
       response.json(recipes.map(recipe => recipe.toJSON({preview: true})));
-    }).catch(() => {
-      response.status(400).json({error: 'database error'});
+    }).catch(error => {
+      if (DEBUG) console.error(error);
+      response.status(500).json({error: ERROR.DATABASE});
     });
   })
 
@@ -95,11 +104,13 @@ router.route('/recipes')
     recipe.save().then(() => {
       (EditedModel as any).update('recipes').then(() => {
         response.json(recipe.toJSON({preview: true}));
-      }).catch(() => {
-        response.status(401).json({error: 'database error'});
+      }).catch(error => {
+        if (DEBUG) console.error(error);
+        response.status(500).json({error: ERROR.DATABASE});
       });
-    }).catch( (error: Error) => {
-      response.status(401).json({error});
+    }).catch( error => {
+      if (DEBUG) console.error(error);
+      response.status(500).json({error: ERROR.DATABASE});
     });
   });
 
@@ -109,8 +120,9 @@ router.route('/recipes/edited')
   .get((request: Request, response: Response) => {
     (EditedModel as any).get('recipes').then((edited: Edited) => {
       return response.json(edited.toJSON());
-    }).catch((error: Error) => {
-      response.json({error});
+    }).catch(error => {
+      if (DEBUG) console.error(error);
+      response.json({error: ERROR.DATABASE});
     });
   });
 
@@ -120,7 +132,13 @@ router.route('/recipes/:id')
 
   /** Get a specific recipe. */
   .get((request: Request, response: Response) => {
-
+    RecipeModel.findById(request.params.id).then(recipe => {
+      if (recipe) response.json(recipe.toJSON());
+      else response.status(404).json({});
+    }).catch(error => {
+      if (DEBUG) console.error(error);
+      response.status(500).json({error: ERROR.DATABASE});
+    });
   })
 
   /** Edit a specific recipe. */
@@ -140,8 +158,9 @@ router.route('/ingredients')
   .get((request: Request, response: Response) => {
     IngredientModel.find().exec().then((ingredients: Array<Ingredient>) => {
       response.json(ingredients.map(ingredient => ingredient.toJSON()));
-    }).catch(() => {
-      response.status(400).json({error: 'database error'});
+    }).catch(error => {
+      if (DEBUG) console.error(error);
+      response.status(400).json({error: ERROR.DATABASE});
     });
   })
 
@@ -157,11 +176,13 @@ router.route('/ingredients')
     ingredient.save().then(() => {
       (EditedModel as any).update('ingredients').then(() => {
         response.json(ingredient.toJSON());
-      }).catch(() => {
-        response.status(401).json({error: 'database error'});
+      }).catch(error => {
+        if (DEBUG) console.error(error);
+        response.status(500).json({error: ERROR.DATABASE});
       });
-    }).catch( () => {
-      response.status(401).json({error: 'database error'});
+    }).catch( error => {
+      if (DEBUG) console.error(error);
+      response.status(500).json({error: ERROR.DATABASE});
     });
   });
 
@@ -171,13 +192,11 @@ router.route('/ingredients/:id')
   /** Get a specific recipe. */
   .get((request: Request, response: Response) => {
     IngredientModel.findById(request.params.id).then(ingredient => {
-      if (ingredient) {
-        response.json(ingredient.toJSON());
-      } else {
-        response.status(404).json({});
-      }
-    }).catch(() => {
-      response.status(401).json({error: 'database error'});
+      if (ingredient) response.json(ingredient.toJSON());
+      else response.status(404).json({});
+    }).catch(error => {
+      if (DEBUG) console.error(error);
+      response.status(500).json({error: ERROR.DATABASE});
     });
   });
 
