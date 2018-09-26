@@ -8,8 +8,6 @@ import { Edited, EditedModel } from './models/edited';
 import { Ingredient, IngredientModel } from './models/ingredient';
 import { Recipe, RecipeModel } from './models/recipe';
 
-import { asNotEmpty, asOptionalString, asString } from './validators';
-
 
 export const router = Router();
 
@@ -39,12 +37,14 @@ router.route('/user')
   });
 
 
+/** Get all recipes or post a new recipe. */
 router.route('/recipes')
 
   /** When a user requests a recipe, return the JSON dump. */
   .get((request: Request, response: Response) => {
     RecipeModel.find().exec().then(
-      (recipes: Array<Recipe>) => response.json(recipes.map(recipe => recipe.toJSON({preview: true}))),
+      (recipes: Array<Recipe>) => response.json(
+        recipes.map(recipe => recipe.toJSON({preview: true}))),
       (error: Error) => response.status(400).json({error: error.message}));
   })
 
@@ -68,6 +68,25 @@ router.route('/recipes/edited')
       (edited: Edited) => response.json(edited.toJSON()),
       (error: Error) => response.json({error})
     );
+  });
+
+
+/** Get, edit, or delete a specific recipe. */
+router.route('/recipes/:id')
+
+  /** Get a specific recipe. */
+  .get((request: Request, response: Response) => {
+
+  })
+
+  /** Edit a specific recipe. */
+  .post(authenticate, (request: Request, response: Response) => {
+
+  })
+
+  /** Delete a recipe. */
+  .delete(authenticate, (request: Request, response: Response) => {
+
   });
 
 

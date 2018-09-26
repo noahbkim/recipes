@@ -1,5 +1,5 @@
 import { Document, Model, model, Schema } from 'mongoose';
-import { asNotEmpty, asOptionalString, asString } from '../validators';
+import { asNotEmpty, asOptionalString, asString } from '../library/validators';
 
 
 export interface Ingredient extends Document {

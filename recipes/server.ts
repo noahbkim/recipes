@@ -7,7 +7,7 @@ import * as passport from 'passport';
 import * as expressSession from 'express-session';
 
 import { UserModel } from './models/user';
-import { Modular, module } from './tricks';
+import { Modular, module } from './library/tricks';
 import { router } from './router';
 
 

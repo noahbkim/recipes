@@ -1,6 +1,6 @@
 import { Document, DocumentToObjectOptions, Model, model, Schema } from 'mongoose';
 import { Ingredient } from './ingredient';
-import { asArray, asNotEmpty, asOptionalArray, asOptionalString, asString } from '../validators';
+import { asArray, asNotEmpty, asOptionalArray, asOptionalString, asString } from '../library/validators';
 
 
 interface PreviewDocumentToObjectOptions extends DocumentToObjectOptions {
