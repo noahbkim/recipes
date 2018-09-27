@@ -127,6 +127,16 @@ describe('recipes', () => {
         .then(() => done());
     });
 
+    it('should get all ingredients', done => {
+      agent
+        .get('/api/ingredients')
+        .expect(200)
+        .then(response => {
+          console.log(response.header);
+          done();
+        });
+    });
+
     it('should modify the ingredient description', done => {
       INGREDIENT.description = NEW_INGREDIENT_DESCRIPTION;
       agent
@@ -138,6 +148,14 @@ describe('recipes', () => {
           done();
           dispatcher.complete('modify ingredient');
         });
+    });
+
+    it('should fail to modify the ingredient description', done => {
+      agent
+        .post(`/api/ingredients/${INGREDIENT.id}`)
+        .send({})
+        .expect(400)
+        .then(() => done());
     });
 
     it('should create the recipe', done => {
@@ -165,6 +183,28 @@ describe('recipes', () => {
         .expect(({body}) => body.name === RECIPE.name && body.notes === RECIPE.notes)
         .then(() => done());
     });
+
+    it('should modify the recipe description', done => {
+      RECIPE.description = NEW_RECIPE_DESCRIPTION;
+      agent
+        .post(`/api/recipes/${RECIPE.id}`)
+        .send(RECIPE)
+        .expect(200)
+        .expect(({body}) => body.description === RECIPE.description)
+        .then(() => {
+          done();
+          dispatcher.complete('modify recipe');
+        });
+    });
+
+    it('should fail to modify the recipe description', done => {
+      agent
+        .post(`/api/recipes/${RECIPE.id}`)
+        .send({})
+        .expect(400)
+        .then(() => done());
+    });
+
   });
 
 });
