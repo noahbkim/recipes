@@ -102,12 +102,9 @@ router.route('/recipes')
       return;
     }
     recipe.save().then(() => {
-      (EditedModel as any).update('recipes').then(() => {
-        response.json(recipe.toJSON({preview: true}));
-      }).catch(error => {
-        if (DEBUG) console.error(error);
-        response.status(500).json({error: ERROR.DATABASE});
-      });
+      return (EditedModel as any).update('recipes');
+    }).then(() => {
+      response.json(recipe.toJSON({preview: true}));
     }).catch( error => {
       if (DEBUG) console.error(error);
       response.status(500).json({error: ERROR.DATABASE});
@@ -174,12 +171,9 @@ router.route('/ingredients')
       return;
     }
     ingredient.save().then(() => {
-      (EditedModel as any).update('ingredients').then(() => {
-        response.json(ingredient.toJSON());
-      }).catch(error => {
-        if (DEBUG) console.error(error);
-        response.status(500).json({error: ERROR.DATABASE});
-      });
+      return (EditedModel as any).update('ingredients');
+    }).then(() => {
+      response.json(ingredient.toJSON());
     }).catch( error => {
       if (DEBUG) console.error(error);
       response.status(500).json({error: ERROR.DATABASE});
@@ -197,6 +191,26 @@ router.route('/ingredients/:id')
     }).catch(error => {
       if (DEBUG) console.error(error);
       response.status(500).json({error: ERROR.DATABASE});
+    });
+  })
+
+  .post((request: Request, response: Response) => {
+    IngredientModel.findById(request.params.id).then(ingredient => {
+      if (!ingredient) response.status(404).json({});
+      try {
+        ingredient.updateFromJSON(request.body);
+      } catch (error) {
+        response.status(400).json({error});
+        return;
+      }
+      return ingredient.save().then(() => {
+        return (EditedModel as any).update('ingredients');
+      }).then(() => {
+        response.json(ingredient.toJSON());
+      }).catch(error => {
+        if (DEBUG) console.error(error);
+        response.status(500).json({error: ERROR.DATABASE});
+      });
     });
   });
 

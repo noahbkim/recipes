@@ -5,6 +5,7 @@ import { asNotEmpty, asOptionalString, asString } from '../library/validators';
 export interface Ingredient extends Document {
   name: string;
   description: string;
+  updateFromJSON(data: any): void;
 }
 
 
@@ -21,10 +22,14 @@ IngredientSchema.methods.toJSON = function(): {} {
   };
 };
 
+IngredientSchema.methods.updateFromJSON = function(data: any): void {
+  this.name = asNotEmpty(asString(data.name, 'invalid name'), 'empty name');
+  this.description = asOptionalString(data.description);
+};
+
 IngredientSchema.statics.fromJSON = function(data: any): Ingredient {
   const ingredient = new IngredientModel();
-  ingredient.name = asNotEmpty(asString(data.name, 'invalid name'), 'empty name');
-  ingredient.description = asOptionalString(data.description);
+  ingredient.updateFromJSON(data);
   return ingredient;
 };
 

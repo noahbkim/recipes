@@ -25,6 +25,7 @@ export interface Recipe extends Document {
   notes: string;
   tags: Array<string>;
   toJSON(PreviewDocumentToObjectOptions?): any;
+  updateFromJSON(data: any): void;
 }
 
 
@@ -62,19 +63,23 @@ RecipeSchema.methods.toJSON = function(options?: PreviewDocumentToObjectOptions)
   };
 };
 
-RecipeSchema.statics.fromJSON = function(data: any): Recipe {
-  const recipe = new RecipeModel();
-  recipe.name = asNotEmpty(asString(data.name, 'invalid name'), 'empty name');
-  recipe.description = asOptionalString(data.description);
-  recipe.parts = asArray(data.parts, 'invalid parts').map((value: any) => ({
+RecipeSchema.methods.updateFromJSON = function(data: any): void {
+  this.name = asNotEmpty(asString(data.name, 'invalid name'), 'empty name');
+  this.description = asOptionalString(data.description);
+  this.parts = asArray(data.parts, 'invalid parts').map((value: any) => ({
     ingredient: asNotEmpty(asString(value.ingredient)),
     amount: asNotEmpty(asString(value.amount))
   }));
-  recipe.steps = asArray(data.steps, 'invalid steps').map((value: any) => ({
+  this.steps = asArray(data.steps, 'invalid steps').map((value: any) => ({
     description: asNotEmpty(asString(value.description))
   }));
-  recipe.notes = asOptionalString(data.notes);
-  recipe.tags = asOptionalArray(data.tags).map((value: any) => asString(value));
+  this.notes = asOptionalString(data.notes);
+  this.tags = asOptionalArray(data.tags).map((value: any) => asString(value));
+};
+
+RecipeSchema.statics.fromJSON = function(data: any): Recipe {
+  const recipe = new RecipeModel();
+  recipe.updateFromJSON(data);
   return recipe;
 };
 
