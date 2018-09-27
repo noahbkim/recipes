@@ -83,12 +83,20 @@ router.route('/ingredients')
 
   /** Return the JSON dump of all ingredients. */
   .get((request: Request, response: Response) => {
-    IngredientModel.find().exec().then((ingredients: Array<Ingredient>) => {
-      (EditedModel as any).get('ingredients').then(edited => {
+    (EditedModel as any).get('ingredients').then(edited => {
+
+      /* Check if the client has a cached version. */
+      const after = request.header('after');
+      if (after && new Date(after) < edited.edited)
+        return response.status(204).json({});
+
+      /* Otherwise send the full list. */
+      IngredientModel.find().exec().then((ingredients: Array<Ingredient>) => {
         response
           .header({edited: edited.edited.toJSON()})
           .json(ingredients.map(ingredient => ingredient.toJSON()));
       });
+
     }).catch(error => {
       if (DEBUG) console.error(error);
       response.status(400).json({error: ERROR.DATABASE});
@@ -181,12 +189,20 @@ router.route('/recipes')
 
   /** When a user requests a recipe, return the JSON dump. */
   .get((request: Request, response: Response) => {
-    RecipeModel.find().exec().then((recipes: Array<Recipe>) => {
-      (EditedModel as any).get('recipes').then(edited => {
+    (EditedModel as any).get('recipes').then(edited => {
+
+      /* Check if the client has a cached version. */
+      const after = request.header('after');
+      if (after && new Date(after) < edited.edited)
+        return response.status(204).json({});
+
+      /* Otherwise, send the full list. */
+      RecipeModel.find().exec().then((recipes: Array<Recipe>) => {
         response
           .header({edited: edited.edited.toJSON()})
           .json(recipes.map(recipe => recipe.toJSON({preview: true})));
       });
+
     }).catch(error => {
       if (DEBUG) console.error(error);
       response.status(500).json({error: ERROR.DATABASE});
