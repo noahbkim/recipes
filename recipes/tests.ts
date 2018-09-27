@@ -131,6 +131,7 @@ describe('recipes', () => {
       agent
         .get('/api/ingredients')
         .expect(200)
+        .expect(({body}) => body.length === 1)
         .then(() => done());
     });
 
@@ -185,6 +186,7 @@ describe('recipes', () => {
       agent
         .get('/api/recipes')
         .expect(200)
+        .expect(({body}) => body.length === 1)
         .then(() => done());
     });
 
