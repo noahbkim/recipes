@@ -41,8 +41,10 @@ router.route('/session')
   })
 
   /** Logout and delete the session. */
-  .delete(authenticate, (request: Request, response: Response) => {
-    request.logout().then(() => response.send({}));
+  .delete((request: Request, response: Response) => {
+    if (request.user)
+      request.logout().then(() => response.send({}));
+    else response.send({});
   });
 
 
@@ -140,6 +142,11 @@ router.route('/ingredients/:id')
 
   /** Get a specific ingredient. */
   .get((request: Request, response: Response) => {
+
+    /* Do rough validation to avoid mongoose errors. */
+    if (/[^a-zA-Z0-9]/.test(request.params.id))
+      return response.status(404).json({});
+
     IngredientModel.findById(request.params.id).then(ingredient => {
       if (ingredient) response.json(ingredient.toJSON());
       else response.status(404).json({});
@@ -246,6 +253,11 @@ router.route('/recipes/:id')
 
   /** Get a specific recipe. */
   .get((request: Request, response: Response) => {
+
+    /* Do rough validation to avoid mongoose errors. */
+    if (/[^a-zA-Z0-9]/.test(request.params.id))
+      return response.status(404).json({});
+
     RecipeModel.findById(request.params.id).then(recipe => {
       if (recipe) response.json(recipe.toJSON());
       else response.status(404).json({});
