@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { IngredientService } from './ingredient.service';
 import { Item, ItemService } from './item';
@@ -7,27 +7,19 @@ import { Recipe, Part, Step } from './recipe';
 
 import { API } from '../../variables';
 import { warn } from '../convenience';
-import {Ingredient} from './ingredient';
 
 
 /** The recipe interface for the API server. */
 @Injectable()
-export class RecipeService implements ItemService {
+export class RecipeService extends ItemService {
+
+  public prefix = '/recipes';
 
   /** Persist the editing ingredient. */
   public local: Recipe = new Recipe();
 
   /** Require an HTTP client and ingredients service. */
-  constructor(private http: HttpClient, private ingredients: IngredientService) { }
-
-  /** Get the list of recipes as items. */
-  list(): Promise<Array<Item>> {
-    return new Promise((resolve, reject) => {
-      this.http.get(API + '/recipes').subscribe((data) => {
-        resolve((data as Array<{}>).map(value => new Item(value)));
-      }, reject);
-    });
-  }
+  constructor(protected http: HttpClient, private ingredients: IngredientService) { super(); }
 
   /** Get a full recipe object from an ID. */
   get(id): Promise<Recipe> {
@@ -46,40 +38,8 @@ export class RecipeService implements ItemService {
             part.ingredient = ingredient;
             resolve2();
           }, reject2);
-        }))).then(value => resolve(recipe), warn());
+        }))).then(() => resolve(recipe), warn());
 
-      }, reject);
-    });
-  }
-
-  /** Create a new ingredient. */
-  create(value): Promise<String> {
-    return new Promise((resolve, reject) => {
-      this.http.post(API + '/recipes', value).subscribe(data => {
-        resolve(data['id']);
-      }, reject);
-    });
-  }
-
-  /** Update an ingredient with its ID. */
-  update(id, value): Promise<String> {
-    return new Promise((resolve, reject) => {
-      this.http.post(API + '/recipes/' + id, value).subscribe(data => {
-        resolve(data['id']);
-      }, reject);
-    });
-  }
-
-  /** Convenience method. */
-  updateOrCreate(id, value): Promise<String> {
-    return id === null ? this.create(value) : this.update(id, value);
-  }
-
-  /** Delete an ingredient. */
-  delete(id): Promise<null> {
-    return new Promise((resolve, reject) => {
-      this.http.delete(API + '/recipes/' + id).subscribe(data => {
-        resolve();
       }, reject);
     });
   }
