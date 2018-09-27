@@ -131,10 +131,15 @@ describe('recipes', () => {
       agent
         .get('/api/ingredients')
         .expect(200)
-        .then(response => {
-          console.log(response.header);
-          done();
-        });
+        .then(() => done());
+    });
+
+    it('should fail to modify the ingredient description', done => {
+      agent
+        .post(`/api/ingredients/${INGREDIENT.id}`)
+        .send({})
+        .expect(400)
+        .then(() => done());
     });
 
     it('should modify the ingredient description', done => {
@@ -148,14 +153,6 @@ describe('recipes', () => {
           done();
           dispatcher.complete('modify ingredient');
         });
-    });
-
-    it('should fail to modify the ingredient description', done => {
-      agent
-        .post(`/api/ingredients/${INGREDIENT.id}`)
-        .send({})
-        .expect(400)
-        .then(() => done());
     });
 
     it('should create the recipe', done => {
@@ -184,6 +181,21 @@ describe('recipes', () => {
         .then(() => done());
     });
 
+    it('should get all recipes', done => {
+      agent
+        .get('/api/recipes')
+        .expect(200)
+        .then(() => done());
+    });
+
+    it('should fail to modify the recipe description', done => {
+      agent
+        .post(`/api/recipes/${RECIPE.id}`)
+        .send({})
+        .expect(400)
+        .then(() => done());
+    });
+
     it('should modify the recipe description', done => {
       RECIPE.description = NEW_RECIPE_DESCRIPTION;
       agent
@@ -197,11 +209,25 @@ describe('recipes', () => {
         });
     });
 
-    it('should fail to modify the recipe description', done => {
+  });
+
+  describe('delete recipe and ingredient', () => {
+    before(() => dispatcher.wait('modify recipe'));
+
+    it('should delete the recipe', done => {
       agent
-        .post(`/api/recipes/${RECIPE.id}`)
-        .send({})
-        .expect(400)
+        .delete(`/api/recipes/${RECIPE.id}`)
+        .expect(200)
+        .then(() => {
+          done();
+          dispatcher.complete('delete recipe');
+        });
+    });
+
+    it('should delete the ingredient', done => {
+      agent
+        .delete(`/api/ingredients/${INGREDIENT.id}`)
+        .expect(200)
         .then(() => done());
     });
 

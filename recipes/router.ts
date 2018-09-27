@@ -167,7 +167,7 @@ router.route('/ingredients/:id')
 
   /** Delete an ingredient. */
   .delete((request: Request, response: Response) => {
-    IngredientModel.findById(request.params.id).then(() => {
+    IngredientModel.findByIdAndDelete(request.params.id).then(() => {
       response.json({});
     }).catch(error => {
       if (DEBUG) console.error(error);
@@ -265,7 +265,12 @@ router.route('/recipes/:id')
 
   /** Delete a recipe. */
   .delete(authenticate, (request: Request, response: Response) => {
-
+    RecipeModel.findByIdAndDelete(request.params.id).then(() => {
+      response.json({});
+    }).catch(error => {
+      if (DEBUG) console.error(error);
+      response.status(500).json({error: ERROR.DATABASE});
+    });
   });
 
 
