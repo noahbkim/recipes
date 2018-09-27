@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { API } from '../../variables';
 import { ItemService, Item } from './item';
@@ -12,18 +12,32 @@ export class IngredientService implements ItemService {
 
   /** Persist the editing ingredient. */
   public local: Ingredient = new Ingredient();
-  public cache: Item[] = null;
 
-  /** Request an HTTP client injection to make API requests. */
+  /** Cache the full ingredient list to save bandwidth. */
+  public cache: Item[] = [];
+  public edited: Date = null;
+
   constructor(private http: HttpClient) {}
 
   /** Get the overview list of ingredients as items. */
-  list(cached = false): Promise<Array<Item>> {
+  list(): Promise<Array<Item>> {
     return new Promise((resolve, reject) => {
-      if (cached && this.cache) { resolve(this.cache); }
-      this.http.get(API + '/ingredients').subscribe(data => {
-        resolve(this.cache = (data as Array<{}>).map(value => new Item(value)));
+
+      /** If we have an edited date from our current list, send with header. */
+      let headers = new HttpHeaders();
+      if (this.edited) headers = headers.set('after', this.edited.toJSON());
+
+      /** Make the request. */
+      this.http.get(API + '/ingredients', {headers, observe: 'response'}).subscribe(response => {
+        if (response.status === 204) {
+          console.log('Used cache for ingredients!');
+          resolve(this.cache);
+        } else {
+          this.edited = new Date(response.headers.get('edited'));
+          resolve(this.cache = (response.body as Array<{}>).map(value => new Item(value)));
+        }
       }, reject);
+
     });
   }
 
@@ -31,14 +45,13 @@ export class IngredientService implements ItemService {
   get(id): Promise<Ingredient> {
     return new Promise((resolve, reject) => {
       this.http.get(API + '/ingredients/' + id).subscribe(data => {
-        console.log(data);
         resolve(new Ingredient(data));
       }, reject);
     });
   }
 
   /** Create a new ingredient. */
-  create(value): Promise<String> {
+  create(value: any): Promise<String> {
     return new Promise((resolve, reject) => {
       this.http.post(API + '/ingredients', value).subscribe(data => {
         resolve(data['id']);
@@ -47,7 +60,7 @@ export class IngredientService implements ItemService {
   }
 
   /** Update an ingredient with its ID. */
-  update(id, value): Promise<String> {
+  update(id: string, value: any): Promise<String> {
     return new Promise((resolve, reject) => {
       this.http.post(API + '/ingredients/' + id, value).subscribe(data => {
         resolve(data['id']);

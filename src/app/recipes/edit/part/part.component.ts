@@ -19,7 +19,6 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
 
   public ingredientName = '';
 
-  ingredientsList: Item[] = [];
   searchItems: Item[];
   validItem = false;
 
@@ -29,7 +28,7 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
 
   /** Custom constructor. */
   constructor(private ingredients: IngredientService) {
-    ingredients.list(true).then(data => this.ingredientsList = data);
+    ingredients.list().then();
   }
 
   ngOnInit() {
@@ -49,7 +48,7 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
     if (invalid) { this.validItem = false;}
     if (this.validItem) { return; }
     this.searchItems = [];
-    for (const ingredient of this.ingredientsList) {
+    for (const ingredient of this.ingredients.cache) {
       if (ingredient.name === this.ingredientName) {
         this.setIngredient(ingredient);
       } else if (this.searchItems.length < 3 && ingredient.name.indexOf(this.ingredientName) > -1) {

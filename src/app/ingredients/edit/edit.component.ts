@@ -33,8 +33,7 @@ export class IngredientEditComponent implements OnInit {
   save(andNew = false) {
     this.ingredients.updateOrCreate(this.ingredients.local.id, this.ingredients.local.toJSON()).then(data => {
       this.ingredients.local = new Ingredient();
-      this.ingredients.list(false).then();
-      if (!andNew) { this.router.navigate(['/ingredients/' + data]); }
+      if (!andNew) { this.router.navigate(['/ingredients/' + data]).then(); }
     }, warn());
   }
 

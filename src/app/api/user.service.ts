@@ -14,7 +14,7 @@ export class UserService {
 
   login(credentials: {username: string, password: string}): Promise<User> {
     return new Promise((resolve, reject) => {
-      this.http.post(API + '/user', credentials).subscribe(data => {
+      this.http.post(API + '/session', credentials).subscribe(data => {
         console.log(data);
         resolve(this.user = new User(data));
       }, error => {

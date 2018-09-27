@@ -1,8 +1,8 @@
 <h1>ingredients</h1>
-<div class="item" *ngFor="let item of items">
+<div class="item" *ngFor="let item of ingredients.cache">
   <h3 class="name"><a routerLink="/ingredients/{{ item.id }}">{{ item.name }}</a></h3>
   <p class="description">{{ item.description }}</p>
 </div>
-<p *ngIf="items.length === 0">
+<p *ngIf="ingredients.cache.length === 0">
   no saved ingredients
 </p>
