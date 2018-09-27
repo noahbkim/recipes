@@ -8,18 +8,21 @@ import { User } from './user';
 @Injectable()
 export class UserService {
 
-  public user: User = null;
+  public me: User = null;
 
   constructor(private http: HttpClient) {}
 
-  login(credentials: {username: string, password: string}): Promise<User> {
+  public login(credentials: {username: string, password: string}): Promise<User> {
     return new Promise((resolve, reject) => {
       this.http.post(API + '/session', credentials).subscribe(data => {
-        console.log(data);
-        resolve(this.user = new User(data));
-      }, error => {
-        console.log(error.error.text);
-      });
+        resolve(this.me = new User(data));
+      }, error => reject(error.error.text));
+    });
+  }
+
+  public logout(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.http.delete(API + '/session').subscribe(() => resolve(), reject);
     });
   }
 

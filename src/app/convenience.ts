@@ -5,8 +5,8 @@ export function warn(): (error: any) => void {
 
 /** Shortcut to reject from a promise. */
 export function warnAndReject(reject): (error: any) => void {
-  return (error) => {
-    console.warn('Error: ');
+  return error => {
+    console.warn('Error: ' + error);
     reject();
   };
 }

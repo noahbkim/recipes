@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { IngredientService } from './ingredient.service';
-import { Item, ItemService } from './item';
+import { ItemService } from './item';
 import { Recipe, Part, Step } from './recipe';
 
 import { API } from '../../variables';

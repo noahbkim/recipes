@@ -51,10 +51,10 @@ export class RecipeEditComponent implements OnInit {
   }
 
   save(andNew) {
-    this.recipes.updateOrCreate(this.recipes.local.id, this.recipes.local.toJSON()).then(data => {
+    this.recipes.updateOrCreate(this.recipes.local.id, this.recipes.local.toJSON()).then(item => {
       this.recipes.local = new Recipe();
-      this.recipes.list();
-      if (!andNew) { this.router.navigate(['recipes', data]).then(); }
+      this.recipes.list().then();
+      if (!andNew) { this.router.navigate(['recipes', item.id]).then(); }
     });
   }
 

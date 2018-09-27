@@ -14,13 +14,10 @@ import { warn } from '../../convenience';
 })
 export class IngredientViewComponent implements OnInit {
 
-  /** Ingredient object. */
   ingredient: Ingredient;
 
-  /** Construct with an ingredients service access. */
   constructor(private ingredients: IngredientService, private route: ActivatedRoute) {}
 
-  /** Called when the component is initialized. */
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.ingredients.get(params.id).then(ingredient => {

@@ -10,12 +10,9 @@ import { IngredientService } from '../api/ingredient.service';
 })
 export class IngredientsComponent implements OnInit {
 
-  /** Construct with an ingredients service access. */
   constructor(public ingredients: IngredientService) {}
 
-  /** Called on initialization of the component. */
-  ngOnInit() {
-    this.ingredients.list().then();
-  }
+  /** Update the list in the background. */
+  ngOnInit() { this.ingredients.list().then(); }
 
 }

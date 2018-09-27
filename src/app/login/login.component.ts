@@ -17,15 +17,10 @@ export class LoginComponent {
   }
 
   public login() {
-    this.user.login(this.credentials).then((user) => {
-      if (this.redirect) {
-        this.router.navigateByUrl(this.redirect).then();
-      } else {
-        this.router.navigate(['']).then();
-      }
-    }, (error) => {
-      console.log(error);
-    });
+    this.user.login(this.credentials).then(() => {
+      if (this.redirect) this.router.navigateByUrl(this.redirect).then();
+      else this.router.navigate(['']).then();
+    }, (error) => console.error(error));
   }
 
 }

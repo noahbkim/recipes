@@ -8,21 +8,19 @@ import { warn } from '../../convenience';
 
 
 @Component({
-  selector: 'app-ingredient-edit',
+  selector: 'ingredient-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
 export class IngredientEditComponent implements OnInit {
 
-  /** Construct with an ingredients service access. */
   constructor(public ingredients: IngredientService, private router: Router, private route: ActivatedRoute) {}
 
-  /** Called when the component is initialized. */
   ngOnInit() {
     this.route.params.subscribe(params => {
       if (params.id) {
         this.ingredients.local.id = params.id;
-        this.ingredients.get(params.id).then(ingredient => {
+        return this.ingredients.get(params.id).then(ingredient => {
           this.ingredients.local = ingredient;
         }, warn());
       }
@@ -31,18 +29,19 @@ export class IngredientEditComponent implements OnInit {
 
   /** Save the ingredient. */
   save(andNew = false) {
-    this.ingredients.updateOrCreate(this.ingredients.local.id, this.ingredients.local.toJSON()).then(data => {
+    this.ingredients.updateOrCreate(this.ingredients.local.id, this.ingredients.local.toJSON()).then(item => {
       this.ingredients.local = new Ingredient();
-      if (!andNew) { this.router.navigate(['/ingredients/' + data]).then(); }
-    }, warn());
+      this.ingredients.list().then();
+      if (!andNew) { return this.router.navigate(['/ingredients/' + item.id]); }
+    }).catch(warn);
   }
 
   /** Delete the ingredient. */
   delete() {
     if (this.ingredients.local.id !== null) {
       this.ingredients.delete(this.ingredients.local.id).then(() => {
-        this.router.navigate(['/ingredients']);
-      }, warn());
+        return this.router.navigate(['/ingredients']);
+      }).catch(warn);
     }
   }
 

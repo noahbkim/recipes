@@ -32,8 +32,6 @@ export class ItemService {
   /** HTTP client is passed from extended service. */
   protected http: HttpClient;
 
-  constructor() {}
-
   /** Get the list of recipes as items. */
   list(): Promise<Array<Item>> {
     return new Promise((resolve, reject) => {
