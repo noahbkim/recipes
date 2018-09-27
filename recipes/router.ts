@@ -87,11 +87,11 @@ router.route('/ingredients')
 
       /* Check if the client has a cached version. */
       const after = request.header('after');
-      if (after && new Date(after) < edited.edited)
+      if (after && new Date(after).getTime() >= edited.edited.getTime())
         return response.status(204).json({});
 
       /* Otherwise send the full list. */
-      IngredientModel.find().exec().then((ingredients: Array<Ingredient>) => {
+      IngredientModel.find().then((ingredients: Array<Ingredient>) => {
         response
           .header({edited: edited.edited.toJSON()})
           .json(ingredients.map(ingredient => ingredient.toJSON()));
@@ -193,7 +193,7 @@ router.route('/recipes')
 
       /* Check if the client has a cached version. */
       const after = request.header('after');
-      if (after && new Date(after) < edited.edited)
+      if (after && new Date(after).getTime() >= edited.edited.getTime())
         return response.status(204).json({});
 
       /* Otherwise, send the full list. */

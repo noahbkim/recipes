@@ -21,7 +21,7 @@ EditedSchema.methods.toJSON = function(): {} {
 
 EditedSchema.statics.update = function(name: string): Promise<Edited> {
   return new Promise<Edited>((resolve: (edited: Edited) => void, reject: (error?: any) => void) => {
-    EditedModel.findOne({name}).exec().then((edited?: Edited) => {
+    EditedModel.findOne({name}).then((edited?: Edited) => {
       if (edited === null)
         edited = new EditedModel({name});
       edited.edited = new Date();
@@ -32,8 +32,8 @@ EditedSchema.statics.update = function(name: string): Promise<Edited> {
 
 EditedSchema.statics.get = function(name: string): Promise<Edited> {
   return new Promise<Edited>((resolve: (edited) => void, reject: (error?: any) => void) => {
-    EditedModel.findOne({name}).exec().then((edited?: Edited) => {
-      if (edited === null) (EditedModel as any).update(name).then(resolve, reject);
+    EditedModel.findOne({name}).then((edited?: Edited) => {
+      if (!edited) (EditedModel as any).update(name).then(resolve, reject);
       else resolve(edited);
     }).catch(reject);
   });
