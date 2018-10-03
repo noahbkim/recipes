@@ -1,20 +1,11 @@
 import { Document, DocumentToObjectOptions, Model, model, Schema } from 'mongoose';
-import { Ingredient } from './ingredient';
+
+import { Part, PartSchema, Step, StepSchema } from './schemas';
 import { asArray, asNotEmpty, asOptionalArray, asOptionalString, asString } from '../library/validators';
 
 
 interface PreviewDocumentToObjectOptions extends DocumentToObjectOptions {
   preview?: boolean;
-}
-
-
-export interface Part {
-  ingredient: string;
-  amount: string;
-}
-
-export interface Step {
-  description: string;
 }
 
 export interface Recipe extends Document {
@@ -28,15 +19,6 @@ export interface Recipe extends Document {
   updateFromJSON(data: any): void;
 }
 
-
-const PartSchema = {
-  ingredient: {type: Schema.Types.ObjectId, ref: 'Ingredient'},
-  amount: String
-};
-
-const StepSchema = {
-  description: String
-};
 
 const RecipeSchema: Schema = new Schema({
   name: {type: String, unique: true},
