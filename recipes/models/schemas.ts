@@ -1,12 +1,10 @@
 import { Schema } from 'mongoose';
-import { asOptionalNumber, asOptionalString, Invalid } from '../library/validators';
+import { asNotEmpty, asOptionalNumber, asOptionalString, asString, Invalid } from '../library/validators';
 
 
 export interface Amount extends Document {
   measure: number;
   units: string;
-  toJSON(): any;
-  updateFromJSON(data: any): void;
 }
 
 export const AmountSchema = new Schema({
@@ -14,19 +12,13 @@ export const AmountSchema = new Schema({
   units: {type: String}
 });
 
-AmountSchema.methods.toJSON = function(): {} {
-  return {
-    measure: this.measure,
-    units: this.units
-  };
-};
-
-AmountSchema.methods.updateFromJSON = function(data: any): void {
-  this.measure = asOptionalNumber(data.measure);
-  this.units = asOptionalString(data.units);
-  if (this.measure === undefined && this.units === '')
+export function asAmount(data: any): {} {
+  const measure = asOptionalNumber(data.measure);
+  const units = asOptionalString(data.units);
+  if (measure === undefined && units === '')
     throw new Invalid('amount must have measure or units');
-};
+  return {measure, units};
+}
 
 
 export interface Part {
@@ -41,6 +33,12 @@ export const PartSchema = new Schema({
   amount: AmountSchema
 });
 
+export function asPart(data: any): {} {
+  const ingredient = asNotEmpty(asString(data.ingredient, 'invalid ingredient id'), 'missing ingredient id');
+  const amount = asAmount(data.amount);
+  return {ingredient, amount};
+}
+
 
 export interface Step {
   description: string;
@@ -51,3 +49,8 @@ export interface Step {
 export const StepSchema = new Schema({
   description: String
 });
+
+export function asStep(data: any): {} {
+  const description = asNotEmpty(asString(data.description));
+  return {description};
+}

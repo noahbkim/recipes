@@ -116,7 +116,12 @@ describe('recipes', () => {
 
   describe('test stored ingredient and create recipe', () => {
     before(() => dispatcher.wait('create ingredient').then(() => {
-      RECIPE.parts.push({ingredient: INGREDIENT.id, amount: '10 oz'});
+      RECIPE.parts.push({
+        ingredient: INGREDIENT.id,
+        amount: {
+          measure: 10.0,
+          units: 'oz'
+        }});
     }));
 
     it('should get the ingredient', done => {

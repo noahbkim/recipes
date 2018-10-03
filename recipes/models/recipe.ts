@@ -1,6 +1,6 @@
 import { Document, DocumentToObjectOptions, Model, model, Schema } from 'mongoose';
 
-import { Part, PartSchema, Step, StepSchema } from './schemas';
+import { asPart, asStep, Part, PartSchema, Step, StepSchema } from './schemas';
 import { asArray, asNotEmpty, asOptionalArray, asOptionalString, asString } from '../library/validators';
 
 
@@ -48,13 +48,8 @@ RecipeSchema.methods.toJSON = function(options?: PreviewDocumentToObjectOptions)
 RecipeSchema.methods.updateFromJSON = function(data: any): void {
   this.name = asNotEmpty(asString(data.name, 'invalid name'), 'empty name');
   this.description = asOptionalString(data.description);
-  this.parts = asArray(data.parts, 'invalid parts').map((value: any) => ({
-    ingredient: asNotEmpty(asString(value.ingredient)),
-    amount: asNotEmpty(asString(value.amount))
-  }));
-  this.steps = asArray(data.steps, 'invalid steps').map((value: any) => ({
-    description: asNotEmpty(asString(value.description))
-  }));
+  this.parts = asArray(data.parts, 'invalid parts').map(asPart);
+  this.steps = asArray(data.steps, 'invalid steps').map(asStep);
   this.notes = asOptionalString(data.notes);
   this.tags = asOptionalArray(data.tags).map((value: any) => asString(value));
 };

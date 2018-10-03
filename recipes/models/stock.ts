@@ -1,6 +1,6 @@
 import { Document, Model, model, Schema } from 'mongoose';
 
-import { Amount, AmountSchema } from './schemas';
+import { Amount, AmountSchema, asAmount } from './schemas';
 import { asNotEmpty, asNumber, asOptionalNumber, asOptionalString, asString } from '../library/validators';
 
 
@@ -40,7 +40,7 @@ StockSchema.methods.updateFromJSON = function(data: any): void {
   this.name = asNotEmpty(asString(data.name, 'invalid name'), 'empty name');
   this.description = asOptionalString(data.description);
   this.price = asOptionalNumber(data.price);
-  this.amount = (AmountSchema as any).fromJSON(data.amount);
+  this.amount = asAmount(data.amount);
   this.count = asNumber(data.count);
   this.ingredient = asString(data.ingredient);
 };

@@ -6,6 +6,7 @@ import { User, UserModel } from './models/user';
 import { Edited, EditedModel } from './models/edited';
 import { Ingredient, IngredientModel } from './models/ingredient';
 import { Recipe, RecipeModel } from './models/recipe';
+import { Invalid } from './library/validators';
 
 
 export const router = Router();
@@ -222,7 +223,9 @@ router.route('/recipes')
     try {
       recipe = (RecipeModel as any).fromJSON(request.body);
     } catch (error) {
-      response.status(400).json({error});
+      console.log(error);
+      if (error instanceof Invalid)
+        response.status(400).json({error: error.error});
       return;
     }
     recipe.save().then(() => {
@@ -274,7 +277,8 @@ router.route('/recipes/:id')
       try {
         recipe.updateFromJSON(request.body);
       } catch (error) {
-        response.status(400).json({error});
+        if (error instanceof Invalid)
+          response.status(400).json({error: error.error});
         return;
       }
       return recipe.save().then(() => {
