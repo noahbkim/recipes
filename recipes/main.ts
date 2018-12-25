@@ -2,8 +2,13 @@ import { Server } from './server';
 
 
 const PORT = 8000;
-
 const server = new Server();
-server.initialize(() =>
-  server.listen(PORT, () =>
-    console.log(`listening on ${PORT}`)));
+
+if (process.argv.length > 2 && process.argv[2] === 'flush') {
+  server.mongoose(() =>
+    server.flush());
+} else {
+  server.initialize(() =>
+    server.listen(PORT, () =>
+      console.log(`listening on ${PORT}`)));
+}

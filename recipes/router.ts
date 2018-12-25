@@ -24,6 +24,32 @@ const ERROR = {
 const DEBUG = true;
 
 
+function createUser(request: Request, response: Response, next?: Function): void {
+  (UserModel as any).fromJSON(request.body).then(user => {
+    user.save().then(() => {
+      if (next) next();
+      else response.json(user.toJSON());
+    }).catch(error => {
+      if (DEBUG) console.error(error);
+      response.status(500).json({error: ERROR.DATABASE});
+    });
+  }).catch(error => {
+    if (DEBUG) console.error(error);
+    response.status(400).json({error});
+  });
+}
+
+function createFirstUserMiddleware(request: Request, response: Response, next: Function): void {
+  UserModel.countDocuments().then(count => {
+    if (count === 0) createUser(request, response, next);
+    else next();
+  }).catch(error => {
+    if (DEBUG) console.error(error);
+    response.status(500).json({error: ERROR.DATABASE});
+  });
+}
+
+
 /** Login and logout routes with obfuscation. */
 router.route('/session')
 
@@ -37,7 +63,7 @@ router.route('/session')
   })
 
   /** Login and create a session. */
-  .post(passport.authenticate('local'), (request: Request, response: Response) => {
+  .post(createFirstUserMiddleware, passport.authenticate('local'), (request: Request, response: Response) => {
     response.json(request.user.toJSON());
   })
 
@@ -54,31 +80,13 @@ router.route('/user')
 
   /** Get information about the user. */
   .get(authenticate, (request: Request, response: Response) => {
-    response.json(request.user.toJSON());
+    if (request.user) response.json(request.user.toJSON());
+    else response.status(400).json();
   })
 
   /** Create a user, allow anyone to create a user if there are none in the database. */
   .post((request: Request, response: Response) => {
-    const create = () => {
-      (UserModel as any).fromJSON(request.body).then(user => {
-        user.save().then(() => {
-          response.json(user.toJSON());
-        }).catch(error => {
-          if (DEBUG) console.error(error);
-          response.status(500).json({error: ERROR.DATABASE});
-        });
-      }).catch(error => {
-        response.status(400).json({error});
-      });
-    };
-    if (response.user) create();
-    else UserModel.countDocuments().then(count => {
-      if (count === 0) create();
-      else response.status(401).json({error: ERROR.AUTHENTICATION});
-    }).catch(error => {
-      if (DEBUG) console.error(error);
-      response.status(500).json({error: ERROR.DATABASE});
-    });
+    if (response.user) createUser(request, response);
   });
 
 

@@ -1,6 +1,6 @@
 import { Document, Model, model, Schema } from 'mongoose';
 import * as passportLocalMongoose from 'passport-local-mongoose';
-import { asNotEmpty, asOptionalString, asString } from '../library/validators';
+import { asNotEmpty, asString } from '../library/validators';
 
 
 export interface User extends Document {

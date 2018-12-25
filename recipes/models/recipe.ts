@@ -20,7 +20,7 @@ export interface Recipe extends Document {
 }
 
 
-const RecipeSchema: Schema = new Schema({
+const RecipeSchema = new Schema({
   name: {type: String, unique: true},
   description: {type: String},
   parts: {type: [PartSchema]},

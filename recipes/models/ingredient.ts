@@ -6,6 +6,7 @@ export interface Ingredient extends Document {
   name: string;
   description: string;
   updateFromJSON(data: any): void;
+  toJSON(): {};
 }
 
 

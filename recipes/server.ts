@@ -26,9 +26,9 @@ export class Server extends Modular {
     this.application.listen(port, then);
   }
 
-  public flush(then: Function): void {
+  public flush(then?: Function): void {
     mongoose.connection.db.dropDatabase().then(
-      () => then(),
+      () => then && then(),
       () => console.log('error dropping database!'));
   }
 
