@@ -1,22 +1,22 @@
 <div *ngIf="recipe">
   <h1>{{ recipe.name }}</h1>
   <p>{{ recipe.description }}</p>
-  <h2>Ingredients</h2>
+  <h2>ingredients</h2>
   <ul>
     <li class="ingredient" *ngFor="let part of recipe.parts">
-      {{ part.amount }}
+      {{ part.amount.measure }} {{ part.amount.units }}
       <a *ngIf="part.ingredient" routerLink="/ingredients/{{ part.ingredient.id }}">
         {{ part.ingredient.name }}
       </a>
     </li>
   </ul>
-  <h2>Recipe</h2>
+  <h2>steps</h2>
   <ol>
     <li *ngFor="let step of recipe.steps">
       {{ step.description }}
     </li>
   </ol>
-  <h2>Notes</h2>
+  <h2>notes</h2>
   <p>{{ recipe.notes }}</p>
   <div class="buttons">
     <a class="button" routerLink="/recipes/{{ recipe.id }}/edit">edit</a>

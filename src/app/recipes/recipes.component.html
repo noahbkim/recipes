@@ -1,4 +1,6 @@
 <h1>recipes</h1>
+<p class="about">all recipes in the database</p>
+
 <div class="item" *ngFor="let item of recipes.cache">
   <h3 class="name"><a routerLink="/recipes/{{ item.id }}">{{ item.name }}</a></h3>
   <p class="description">{{ item.description }}</p>

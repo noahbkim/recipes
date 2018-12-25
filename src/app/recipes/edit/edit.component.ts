@@ -55,7 +55,7 @@ export class RecipeEditComponent implements OnInit {
       this.recipes.local = new Recipe();
       this.recipes.list().then();
       if (!andNew) { this.router.navigate(['recipes', item.id]).then(); }
-    });
+    }).catch(warn());
   }
 
   /** Delete the ingredient. */
@@ -63,7 +63,7 @@ export class RecipeEditComponent implements OnInit {
     if (this.recipes.local.id !== null) {
       this.recipes.delete(this.recipes.local.id).then(() => {
         this.router.navigate(['recipes']).then();
-      }, warn());
+      }).catch(warn());
     }
   }
 

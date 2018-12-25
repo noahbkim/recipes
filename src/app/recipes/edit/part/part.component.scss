@@ -1,10 +1,20 @@
+/*#measure {
+  width: 60px;
+  margin-right: 5px;
+}
+
+#units {
+  width: 40px;
+  margin-right: 5px;
+}*/
+
 #amount {
   width: 100px;
   margin-right: 5px;
 }
 
 #ingredient {
-  width: 260px;
+  width: 255px;
   color: #AAA;
 
   &.valid {

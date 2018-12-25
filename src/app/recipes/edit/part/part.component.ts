@@ -32,7 +32,7 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.validItem = this.part.id !== '';
+    this.validItem = this.part.ingredient.id !== '';
     this.ingredientName = this.part.ingredient ? this.part.ingredient.name : '';
   }
 
@@ -63,7 +63,6 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
 
   setIngredient(ingredient) {
     console.log(ingredient);
-    this.part.id = ingredient.id;
     this.part.ingredient = ingredient;
     this.validItem = true;
     this.ingredientName = ingredient.name;

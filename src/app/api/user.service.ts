@@ -12,6 +12,10 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
+  // public get(): Promise<User> {
+  //
+  // }
+
   public login(credentials: {username: string, password: string}): Promise<User> {
     return new Promise((resolve, reject) => {
       this.http.post(API + '/session', credentials).subscribe(data => {

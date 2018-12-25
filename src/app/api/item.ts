@@ -55,7 +55,7 @@ export class ItemService {
   /** Create a new ingredient. */
   create(value: any): Promise<Item> {
     return new Promise((resolve, reject) => {
-      this.http.post(API + '/ingredients', value).subscribe(data => {
+      this.http.post(API + this.prefix, value).subscribe(data => {
         resolve(new Item(data));
       }, reject);
     });
@@ -64,7 +64,8 @@ export class ItemService {
   /** Update an ingredient with its ID. */
   update(id: string, value: any): Promise<Item> {
     return new Promise((resolve, reject) => {
-      this.http.post(API + '/ingredients/' + id, value).subscribe(data => {
+      console.log(value);
+      this.http.post(API + this.prefix + '/' + id, value).subscribe(data => {
         resolve(new Item(data));
       }, reject);
     });
@@ -78,9 +79,8 @@ export class ItemService {
   /** Delete an ingredient. */
   delete(id): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.delete(API + '/ingredients/' + id).subscribe(() => resolve(), reject);
+      this.http.delete(API + this.prefix + '/' + id).subscribe(() => resolve(), reject);
     });
   }
 
 }
-

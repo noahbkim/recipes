@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { IngredientService } from './ingredient.service';
 import { ItemService } from './item';
-import { Recipe, Part, Step } from './recipe';
+import { Recipe } from './recipe';
 
 import { API } from '../../variables';
 import { warn } from '../convenience';
@@ -24,17 +24,14 @@ export class RecipeService extends ItemService {
   /** Get a full recipe object from an ID. */
   get(id): Promise<Recipe> {
     return new Promise((resolve, reject) => {
-      this.http.get(API + '/recipes/' + id).subscribe(data => {
+      this.http.get(API + this.prefix + '/' + id).subscribe(data => {
 
         /* Create the recipe. */
-        data = data as {};
-        data['parts'] = data['parts'].map(values => new Part(values));
-        data['steps'] = data['steps'].map(values => new Step(values));
-        const recipe = new Recipe(data);
+        const recipe = Recipe.fromJSON(data);
 
         /* Map and pull all the ingredients for the parts, resolving when finished. */
         Promise.all(data['parts'].map(part => new Promise((resolve2, reject2) => {
-          this.ingredients.get(part.id).then(ingredient => {
+          this.ingredients.get(part.ingredient.id).then(ingredient => {
             part.ingredient = ingredient;
             resolve2();
           }, reject2);

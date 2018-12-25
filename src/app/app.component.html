@@ -2,19 +2,7 @@
   <div class="flex">
     <div class="left">
       <div class="navigation">
-        <div id="recipes" class="section">
-          <h3><a routerLink="/recipes">recipes</a></h3>
-          <div class="dropdown">
-            <a routerLink="/recipes/new">new</a>
-          </div>
-        </div>
-        <div id="ingredients" class="section">
-          <h3><a routerLink="/ingredients">ingredients</a></h3>
-          <div class="dropdown">
-            <!--a routerLink="/ingredients/stock">stock</a-->
-            <a routerLink="/ingredients/new">new</a>
-          </div>
-        </div>
+        <ng-container *ngIf="users.me; then authenticated else public"></ng-container>
       </div>
     </div>
     <div class="right">
@@ -22,3 +10,28 @@
     </div>
   </div>
 </div>
+
+<ng-template #public>
+  <div class="section">
+    <h3><a routerLink="/recipes">recipes</a></h3>
+    <div class="dropdown">
+      <a routerLink="/login">login</a>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #authenticated>
+  <div class="section">
+    <h3><a routerLink="/recipes">recipes</a></h3>
+    <div class="dropdown">
+      <a routerLink="/recipes/new">new</a>
+    </div>
+  </div>
+  <div class="section">
+    <h3><a routerLink="/ingredients">ingredients</a></h3>
+    <div class="dropdown">
+      <!--a routerLink="/ingredients/stock">stock</a-->
+      <a routerLink="/ingredients/new">new</a>
+    </div>
+  </div>
+</ng-template>
