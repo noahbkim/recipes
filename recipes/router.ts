@@ -191,9 +191,14 @@ router.route('/ingredients/:id')
 
   /** Delete an ingredient. */
   .delete((request: Request, response: Response) => {
-    IngredientModel.findByIdAndDelete(request.params.id).then(() => {
-      response.json({});
-    }).catch(error => {
+    IngredientModel.findByIdAndDelete(request.params.id).then(() =>
+      (EditedModel as any).update('ingredients').then(() =>
+        response.json({})
+      ).catch(error => {
+        if (DEBUG) console.error(error);
+        response.status(500).json({error: ERROR.DATABASE})
+      })
+    ).catch(error => {
       if (DEBUG) console.error(error);
       response.status(500).json({error: ERROR.DATABASE});
     });
@@ -306,9 +311,14 @@ router.route('/recipes/:id')
 
   /** Delete a recipe. */
   .delete(authenticate, (request: Request, response: Response) => {
-    RecipeModel.findByIdAndDelete(request.params.id).then(() => {
-      response.json({});
-    }).catch(error => {
+    RecipeModel.findByIdAndDelete(request.params.id).then(() =>
+      (EditedModel as any).update('recipes').then(() =>
+        response.json({})
+      ).catch(error => {
+        if (DEBUG) console.error(error);
+        response.status(500).json({error: ERROR.DATABASE})
+      })
+    ).catch(error => {
       if (DEBUG) console.error(error);
       response.status(500).json({error: ERROR.DATABASE});
     });
