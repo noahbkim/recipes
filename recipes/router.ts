@@ -231,9 +231,10 @@ router.route('/recipes')
     try {
       recipe = (RecipeModel as any).fromJSON(request.body);
     } catch (error) {
-      console.log(error);
       if (error instanceof Invalid)
         response.status(400).json({error: error.error});
+      else response.status(500).json({error: ERROR.DATABASE});
+      if (DEBUG) console.error(error);
       return;
     }
     recipe.save().then(() => {

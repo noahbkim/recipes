@@ -30,15 +30,17 @@ const RecipeSchema = new Schema({
 });
 
 RecipeSchema.methods.toJSON = function(options?: PreviewDocumentToObjectOptions): {} {
-  return options && options.preview ? {
+
+  if (options && options.preview) return {
     id: this.id,
     name: this.name,
-    description: this.description
-  } : {
+    description: this.description};
+
+  return {
     id: this.id,
     name: this.name,
     description: this.description,
-    parts: this.parts,
+    parts: this.parts.map(part => part.toJSON()),
     steps: this.steps,
     notes: this.notes,
     tags: this.tags

@@ -1,6 +1,5 @@
 import { Document, Model, model, Schema } from 'mongoose';
 
-import { Amount, AmountSchema, asAmount } from './schemas';
 import { asNotEmpty, asNumber, asOptionalNumber, asOptionalString, asString } from '../library/validators';
 
 
@@ -8,7 +7,7 @@ export interface Stock extends Document {
   name: string;
   description: string;
   price: number;
-  amount: Amount;
+  amount: string;
   count: number;
   ingredient: string;
   updateFromJSON(data: any): void;
@@ -19,7 +18,7 @@ const StockSchema: Schema = new Schema({
   name: {type: String},
   description: {type: String},
   price: {type: Number},
-  amount: {type: AmountSchema},
+  amount: {type: String},
   count: {type: Number},
   ingredient: {type: Schema.Types.ObjectId, ref: 'Ingredient'}
 });
@@ -40,7 +39,7 @@ StockSchema.methods.updateFromJSON = function(data: any): void {
   this.name = asNotEmpty(asString(data.name, 'invalid name'), 'empty name');
   this.description = asOptionalString(data.description);
   this.price = asOptionalNumber(data.price);
-  this.amount = asAmount(data.amount);
+  this.amount = asString(data.amount);
   this.count = asNumber(data.count);
   this.ingredient = asString(data.ingredient);
 };

@@ -24,11 +24,16 @@ export function asAmount(data: any): {} {
 export interface Part {
   ingredient: string;
   amount: string;
+  toJSON(): {};
 }
 
-export const PartSchema = {
+export const PartSchema = new Schema({
   ingredient: {type: Schema.Types.ObjectId, ref: 'Ingredient'},
   amount: {type: String}
+}, {_id: false});
+
+PartSchema.methods.toJSON = function(): {} {
+  return {ingredient: this.ingredient.toString(), amount: this.amount};
 };
 
 export function asPart(data: any): {} {
@@ -42,9 +47,9 @@ export interface Step {
   description: string;
 }
 
-export const StepSchema = {
+export const StepSchema = new Schema({
   description: String
-};
+}, {_id: false});
 
 export function asStep(data: any): {} {
   const description = asNotEmpty(asString(data.description));
