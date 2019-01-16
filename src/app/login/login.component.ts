@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserService } from '../api/user.service';
 import { ActivatedRoute, Router} from '@angular/router';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -21,6 +22,11 @@ export class LoginComponent {
       if (this.redirect) this.router.navigateByUrl(this.redirect).then();
       else this.router.navigate(['']).then();
     }, (error) => console.error(error));
+  }
+
+  public onKeyDown(event: KeyboardEvent) {
+    if (event.key == 'Enter')
+      this.login();
   }
 
 }

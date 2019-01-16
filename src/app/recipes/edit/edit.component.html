@@ -4,15 +4,13 @@
   <h2>ingredients</h2>
   <ul id="ingredients">
     <li *ngFor="let part of recipes.local.parts; let i = index">
-      <app-part-editor [part]="part" [add]=makeAdd(recipes.local.parts) [remove]=makeRemove(recipes.local.parts) [index]=i>
-      </app-part-editor>
+      <app-part-editor [part]="part" [delegate]="partsDelegate" [index]=i></app-part-editor>
     </li>
   </ul>
   <h2>steps</h2>
   <ol id="steps">
     <li *ngFor="let step of recipes.local.steps; let i = index">
-      <app-step-editor [step]=step [add]=makeAdd(recipes.local.steps) [remove]=makeRemove(recipes.local.steps) [index]=i>
-      </app-step-editor>
+      <app-step-editor [step]=step [delegate]="stepsDelegate" [index]=i></app-step-editor>
     </li>
   </ol>
   <h2>notes</h2>

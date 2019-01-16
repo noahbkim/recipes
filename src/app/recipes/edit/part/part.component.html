@@ -4,9 +4,10 @@
 <input #ingredient id="ingredient" type="text" class="p" placeholder="ingredient" autocomplete="off"
        [(ngModel)]=ingredientName
        [ngModel]=ingredientName
-       [class.valid]=validItem>
+       [class.valid]=validItem
+       (keydown)="onKeyDown($event)">
 <span #add class="add">+</span>
 <span *ngIf="index > 0" #remove class="delete">&times;</span>
 <div id="search">
-  <span *ngFor="let ingredient of searchItems" (click)="setIngredient(ingredient)">{{ ingredient.name }}</span>
+  <span *ngFor="let ingredient of searchItems" (mousedown)="setIngredient(ingredient)">{{ ingredient.name }}</span>
 </div>

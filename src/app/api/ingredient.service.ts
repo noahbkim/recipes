@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { API } from '../../variables';
-import { ItemService, Item } from './item';
+import { ItemService } from './item';
 import { Ingredient } from './ingredient';
 
 
@@ -20,7 +20,7 @@ export class IngredientService extends ItemService {
   /** Get a full ingredient object from its ID. */
   get(id): Promise<Ingredient> {
     return new Promise((resolve, reject) => {
-      this.http.get(API + '/ingredients/' + id).subscribe(data => {
+      this.http.get(API + this.prefix + '/' + id).subscribe(data => {
         resolve(new Ingredient(data));
       }, reject);
     });

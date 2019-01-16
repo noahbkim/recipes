@@ -5,6 +5,7 @@ import { Ingredient } from '../../api/ingredient';
 import { IngredientService } from '../../api/ingredient.service';
 
 import { warn } from '../../convenience';
+import {Recipe} from "../../api/recipe";
 
 
 @Component({
@@ -40,6 +41,7 @@ export class IngredientEditComponent implements OnInit {
   delete() {
     if (this.ingredients.local.id !== null) {
       this.ingredients.delete(this.ingredients.local.id).then(() => {
+        this.ingredients.local = new Ingredient();
         return this.router.navigate(['/ingredients']);
       }).catch(warn);
     }

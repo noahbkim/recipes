@@ -2,8 +2,17 @@
 <p class="about">hey, get out of here!</p>
 
 <form>
-  <input type="text" [(ngModel)]="credentials.username" name="username" placeholder="username">
-  <input id="password" type="password" [(ngModel)]="credentials.password" name="password" placeholder="password">
+  <input type="text"
+         [(ngModel)]="credentials.username"
+         name="username"
+         placeholder="username"
+         (keydown)="onKeyDown($event)">
+  <input id="password"
+         type="password"
+         [(ngModel)]="credentials.password"
+         name="password"
+         placeholder="password"
+         (keydown)="onKeyDown($event)">
   <div class="buttons">
     <span class="button" (click)="login()">submit</span>
   </div>

@@ -7,7 +7,7 @@ import { Recipe, Part, Step } from '../../api/recipe';
 import { RecipeService } from '../../api/recipe.service';
 
 import { warn } from '../../convenience';
-import {Ingredient} from '../../api/ingredient';
+import {ListEditDelegate} from "../../library/list";
 
 
 @Component({
@@ -22,6 +22,10 @@ export class RecipeEditComponent implements OnInit {
   form: Element;
   ingredientList: Item[] = [];
 
+  /** Editing delegates for passing to list elements. */
+  partsDelegate: ListEditDelegate;
+  stepsDelegate: ListEditDelegate;
+
   /** Construct with an ingredients service access. */
   constructor(
     private ingredients: IngredientService,
@@ -30,7 +34,8 @@ export class RecipeEditComponent implements OnInit {
     private route: ActivatedRoute) {}
 
   /** Called when the component is initialized. */
-  ngOnInit() {
+  public ngOnInit() {
+    this.bind();
     this.form = document.forms['recipe'];
     this.ingredients.list().then(ingredients => {
       this.ingredientList = ingredients;
@@ -39,43 +44,38 @@ export class RecipeEditComponent implements OnInit {
           this.id = params.id;
           this.recipes.get(params.id).then(recipe => this.recipes.local = recipe, warn());
         } else {
-          if (this.recipes.local.parts.length === 0) {
+          if (this.recipes.local.parts.length === 0)
             this.recipes.local.parts.push(new Part());
-          }
-          if (this.recipes.local.steps.length === 0) {
+          if (this.recipes.local.steps.length === 0)
             this.recipes.local.steps.push(new Step());
-          }
         }
       });
     });
   }
 
-  save(andNew) {
+  public save(andNew) {
     this.recipes.updateOrCreate(this.recipes.local.id, this.recipes.local.toJSON()).then(item => {
       this.recipes.local = new Recipe();
+      this.bind();
       this.recipes.list().then();
       if (!andNew) { this.router.navigate(['recipes', item.id]).then(); }
     }).catch(warn());
   }
 
   /** Delete the ingredient. */
-  delete() {
+  public delete() {
     if (this.recipes.local.id !== null) {
       this.recipes.delete(this.recipes.local.id).then(() => {
+        this.recipes.local = new Recipe();
+        this.bind();
         this.router.navigate(['recipes']).then();
       }).catch(warn());
     }
   }
 
-  makeAdd(list: any[]) {
-    return (index: number = null, object: any) => {
-      if (index === null) { index = list.length; }
-      list.splice(index, 0, object);
-    };
-  }
-
-  makeRemove(list: any[]) {
-    return (index: number) => list.splice(index, 1);
+  private bind() {
+    this.partsDelegate = new ListEditDelegate(this.recipes.local.parts);
+    this.stepsDelegate = new ListEditDelegate(this.recipes.local.steps);
   }
 
 }

@@ -1,10 +1,10 @@
 <div *ngIf="recipe">
   <h1>{{ recipe.name }}</h1>
-  <p>{{ recipe.description }}</p>
+  <p class="recipe">{{ recipe.description }}</p>
   <h2>ingredients</h2>
   <ul>
     <li class="ingredient" *ngFor="let part of recipe.parts">
-      {{ part.amount.measure }} {{ part.amount.units }}
+      {{ part.amount }}
       <a *ngIf="part.ingredient" routerLink="/ingredients/{{ part.ingredient.id }}">
         {{ part.ingredient.name }}
       </a>

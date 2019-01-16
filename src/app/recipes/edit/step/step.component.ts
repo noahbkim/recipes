@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, Input, ViewChild } from '@angular/core';
 
 import { Step } from '../../../api/recipe';
+import {ListEditDelegate} from "../../../library/list";
 
 
 @Component({
@@ -12,15 +13,15 @@ export class StepEditorComponent implements AfterViewInit {
 
   @Input() step: Step;
   @Input() index: number;
-  @Input() add: (index: number, object: any) => null;
-  @Input() remove: (index: number) => null;
+  @Input() delegate: ListEditDelegate;
 
   @ViewChild('add') addElement;
   @ViewChild('remove') removeElement;
 
-  ngAfterViewInit() {
-    this.addElement.nativeElement.addEventListener('click', () => this.add(this.index + 1, new Step()));
-    if (this.removeElement) { this.removeElement.nativeElement.addEventListener('click', () => this.remove(this.index)); }
+  public ngAfterViewInit() {
+    this.addElement.nativeElement.addEventListener('click', () => this.delegate.add(new Step(), this.index + 1));
+    if (this.removeElement)
+      this.removeElement.nativeElement.addEventListener('click', () => this.delegate.remove(this.index));
   }
 
 }

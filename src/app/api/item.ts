@@ -64,7 +64,6 @@ export class ItemService {
   /** Update an ingredient with its ID. */
   update(id: string, value: any): Promise<Item> {
     return new Promise((resolve, reject) => {
-      console.log(value);
       this.http.post(API + this.prefix + '/' + id, value).subscribe(data => {
         resolve(new Item(data));
       }, reject);
@@ -79,7 +78,10 @@ export class ItemService {
   /** Delete an ingredient. */
   delete(id): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.delete(API + this.prefix + '/' + id).subscribe(() => resolve(), reject);
+      this.http.delete(API + this.prefix + '/' + id).subscribe(() => {
+        this.cache.splice(this.cache.findIndex(item => item.id === id), 1);
+        resolve();
+      }, reject);
     });
   }
 

@@ -3,6 +3,7 @@ import { Component, Input, AfterViewInit, OnInit, ViewChild } from '@angular/cor
 import { Part } from '../../../api/recipe';
 import { Item } from '../../../api/item';
 import { IngredientService } from '../../../api/ingredient.service';
+import { ListEditDelegate } from "../../../library/list";
 
 
 @Component({
@@ -13,9 +14,8 @@ import { IngredientService } from '../../../api/ingredient.service';
 export class PartEditorComponent implements OnInit, AfterViewInit {
 
   @Input() part: Part;
-  @Input() add: (index: number, object: any) => null;
-  @Input() remove: (index: number) => null;
   @Input() index: number;
+  @Input() delegate: ListEditDelegate;
 
   public ingredientName = '';
 
@@ -37,8 +37,9 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.addElement.nativeElement.addEventListener('click', () => this.add(this.index + 1, new Part()));
-    if (this.removeElement) { this.removeElement.nativeElement.addEventListener('click', () => this.remove(this.index)); }
+    this.addElement.nativeElement.addEventListener('click', () => this.addAfter());
+    if (this.removeElement)
+      this.removeElement.nativeElement.addEventListener('click', () => this.delegate.remove(this.index));
     this.ingredientElement.nativeElement.addEventListener('focus', () => this.updateSearch());
     this.ingredientElement.nativeElement.addEventListener('input', () => this.updateSearch(true));
     this.ingredientElement.nativeElement.addEventListener('blur', () => this.clearSearch());
@@ -58,15 +59,25 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
   }
 
   clearSearch() {
-    setTimeout(() => this.searchItems = [], 500);
+    setTimeout(() => this.searchItems = [], 1);
   }
 
   setIngredient(ingredient) {
-    console.log(ingredient);
     this.part.ingredient = ingredient;
     this.validItem = true;
     this.ingredientName = ingredient.name;
     this.clearSearch();
+  }
+
+  addAfter() {
+    this.delegate.add(new Part(), this.index + 1);
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key == 'Enter') {
+      this.addAfter();
+
+    }
   }
 
 }

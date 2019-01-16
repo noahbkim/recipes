@@ -30,7 +30,7 @@ export class RecipeService extends ItemService {
         const recipe = Recipe.fromJSON(data);
 
         /* Map and pull all the ingredients for the parts, resolving when finished. */
-        Promise.all(data['parts'].map(part => new Promise((resolve2, reject2) => {
+        Promise.all(recipe.parts.map(part => new Promise((resolve2, reject2) => {
           this.ingredients.get(part.ingredient.id).then(ingredient => {
             part.ingredient = ingredient;
             resolve2();

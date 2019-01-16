@@ -33,7 +33,6 @@ export class Part {
   }
 
   static fromJSON(data: {}): Part {
-    console.log(data);
     return new Part({
       amount: data['amount'], //Amount.fromJSON(data['amount']),
       ingredient: new Ingredient({id: data['ingredient']})
