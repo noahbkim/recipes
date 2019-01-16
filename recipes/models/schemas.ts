@@ -1,24 +1,5 @@
 import { Schema } from 'mongoose';
-import { asNotEmpty, asOptionalNumber, asOptionalString, asString, Invalid } from '../library/validators';
-
-
-/* export interface Amount {
-  measure: number;
-  units: string;
-}
-
-export const AmountSchema = {
-  measure: {type: Number},
-  units: {type: String}
-};
-
-export function asAmount(data: any): {} {
-  const measure = asOptionalNumber(data.measure);
-  const units = asOptionalString(data.units);
-  if (measure === undefined && units === '')
-    throw new Invalid('amount must have measure or units');
-  return {measure, units};
-} */
+import { asNotEmpty, asString } from '../library/validators';
 
 
 export interface Part {
