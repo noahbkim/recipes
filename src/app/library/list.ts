@@ -16,7 +16,7 @@ export class ListEditDelegate {
      this.list.splice(index, 1)
   }
 
-  get(index: number) {
+  get(index: number): any {
     return this.list[index];
   }
 

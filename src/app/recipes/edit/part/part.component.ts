@@ -20,10 +20,14 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
   public ingredientName = '';
 
   searchItems: Item[];
+  searchItemIndex: number;
   validItem = false;
+
+  static focus: boolean = false;
 
   @ViewChild('add') addElement;
   @ViewChild('remove') removeElement;
+  @ViewChild('amount') amountElement;
   @ViewChild('ingredient') ingredientElement;
 
   /** Custom constructor. */
@@ -43,6 +47,10 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
     this.ingredientElement.nativeElement.addEventListener('focus', () => this.updateSearch());
     this.ingredientElement.nativeElement.addEventListener('input', () => this.updateSearch(true));
     this.ingredientElement.nativeElement.addEventListener('blur', () => this.clearSearch());
+    if (PartEditorComponent.focus) {
+      setTimeout(() => this.amountElement.nativeElement.focus(), 1);
+      PartEditorComponent.focus = false;
+    }
   }
 
   updateSearch(invalid = false) {
@@ -75,8 +83,8 @@ export class PartEditorComponent implements OnInit, AfterViewInit {
 
   onKeyDown(event: KeyboardEvent) {
     if (event.key == 'Enter') {
+      PartEditorComponent.focus = true;
       this.addAfter();
-
     }
   }
 

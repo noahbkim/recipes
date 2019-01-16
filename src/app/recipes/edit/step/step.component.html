@@ -1,3 +1,7 @@
-<input type="text" class="p" placeholder="step" [(ngModel)]="step.description">
+<input #description type="text"
+       class="p"
+       placeholder="step"
+       [(ngModel)]="step.description"
+       (keydown)="onKeyDown($event)">
 <span #add class="add">+</span>
 <span *ngIf="index > 0" #remove class="delete">&times;</span>
